@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <h1>BBS DEMO</h1>
+    <p class="pan">
+    なんでも書いて、消して、メール飛ばしたり。<br/>
+    通知メールは <span>ord******er@gmail.com</span> から送信されます。
+    </p>
+      <hr/>
+    {% for entry in entries %}
+    <div class="pure-g entry">
+      <div class="pure-u-1" title="投稿番号 {{entry.id}}">
+        [{{entry.id}}] <a href="/send/{{entry.id}}">{{ entry.name }}</a>
+      </div>
+      <div class="pure-u-1">
+        [住み] {{entry.area}}
+        [年齢] {{entry.age}}
+        [性]   {{entry.gender}}
+      </div>
+      <div class="pure-u-1 body">
+        <p>
+        {% autoescape false %}
+        {{ entry.text | replace("\n", "<br/>") }}
+        {% endautoescape %}
+        </p>
+      </div>
+      <div class="pure-u-1 time">
+        {{entry.created_on.strftime("%y/%m/%d %H:%M")}}
+      </div>
+    </div>
+
+    <hr/>
+    {% endfor %}
+    {{ pagination.links }}
+
+    [<a href="/new">新規投稿</a>]
+    <form action = "" method = "POST">
+      <p>[削除]</p>
+      <p>投稿者ID: <input type = "text" name = "id" pattern="[\d]{1,}" required/></p>
+      <p>パスワード: <input type ="text" name = "password" pattern="[a-zA-Z\d]{4,8}" maxlength = "8" title = "4文字以上、8文字以下の長さのパスワードを半角英数字で入力してください。" required/></p>
+      自分が投稿した記事のパスワードを知っていれば、自分で消せます(ダミー投稿のパスワードは全て <b>0000</b>)
+    <p><input type = "submit" value = "削除" /></p>
+    </form>
+    [<a href="{{ url_for('admin.login_view') }}">管理画面</a>]<br/>
+
+{% endblock %}
