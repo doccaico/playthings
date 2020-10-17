@@ -1,0 +1,13 @@
+#!/bin/bash
+
+OPT="-Wall"
+
+dev() {
+  gcc "$OPT" main.c -o ook && ./ook $1
+}
+
+build() {
+  gcc "$OPT" -s -Wall main.c -o ook
+}
+
+$1 $2

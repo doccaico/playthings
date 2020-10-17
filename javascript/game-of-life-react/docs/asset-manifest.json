@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/react-lifegame/static/css/main.b8357980.chunk.css",
+    "main.js": "/react-lifegame/static/js/main.8cf94d3a.chunk.js",
+    "main.js.map": "/react-lifegame/static/js/main.8cf94d3a.chunk.js.map",
+    "runtime~main.js": "/react-lifegame/static/js/runtime~main.85b28527.js",
+    "runtime~main.js.map": "/react-lifegame/static/js/runtime~main.85b28527.js.map",
+    "static/js/2.73fe38e1.chunk.js": "/react-lifegame/static/js/2.73fe38e1.chunk.js",
+    "static/js/2.73fe38e1.chunk.js.map": "/react-lifegame/static/js/2.73fe38e1.chunk.js.map",
+    "index.html": "/react-lifegame/index.html",
+    "precache-manifest.ba0724f2ae7ae74b59926e94c61af5a1.js": "/react-lifegame/precache-manifest.ba0724f2ae7ae74b59926e94c61af5a1.js",
+    "service-worker.js": "/react-lifegame/service-worker.js",
+    "static/css/main.b8357980.chunk.css.map": "/react-lifegame/static/css/main.b8357980.chunk.css.map"
+  }
+}

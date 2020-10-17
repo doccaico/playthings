@@ -1,0 +1,43 @@
+#!/bin/bash
+
+OPT="-Werror -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -Wno-unused -Wno-variadic-macros -Wno-parentheses -fdiagnostics-show-option"
+
+OPT="-Wall"
+
+dev() {
+  # gcc $OPT  -g -DDEBUG -c convkana.c -o convkana.o
+  # gcc $OPT  -g -DDEBUG main.c convkana.o
+  gcc $OPT -g -c convkana.c -o convkana.o
+  gcc $OPT -g main.c convkana.o -o canacon
+}
+
+build() {
+  gcc $OPT -O2 -c convkana.c -o convkana.o
+  gcc $OPT -s -O2 main.c convkana.o -o canacon
+}
+
+alltest() {
+  dev
+  for i in {1..5}; do
+    N=$i
+    F="in${N}.log"
+    ./canacon $F > fromfile.log
+    ./canacon < $F > fromstdin.log
+    diff -u fromfile.log fromstdin.log
+    echo Done: $F
+  done
+}
+
+test() {
+  dev
+  N=1
+  F="in${N}.log"
+  ./canacon $F > fromfile.log
+  ./canacon < $F > fromstdin.log
+  diff -u fromfile.log fromstdin.log
+}
+
+$1
+# alltest
+# test
+# build

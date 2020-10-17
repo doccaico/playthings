@@ -1,0 +1,8 @@
+*
+!*/
+!*.*
+
+zig-cache
+a.out
+main
+readline_history

@@ -1,0 +1,32 @@
+# ファイルを除外
+
+## どのディレクトリかを問わず、file.phpを除外
+#file-a.php
+
+## .gitignore が置かれたディレクトリ内のfile.phpを除外
+#/file-a.php
+
+# ディレクトリを除外
+
+## 文字列マッチが見つかるパスを除外する
+#directory-a
+
+## ディレクトリ配下（のすべてのパスを）除外する
+#directory-a/ 
+
+## 全ての拡張子無しのファイルを除外する
+# 下記の３行をファイルの他の指定よりも上に書く
+#*
+#!*/
+#!*.*
+
+## その他
+# http://www-creators.com/archives/1662
+
+# *.o
+tmpa
+tmpb
+main
+
+# binname
+# calc
