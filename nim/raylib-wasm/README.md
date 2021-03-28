@@ -1,4 +1,4 @@
-## raylib-wasm
+## raylib-wasm (using [this binding](https://github.com/doccaico/raylib-nim))
 [DEMO](https://doccaico.github.io/playthings/nim/raylib-wasm/)
 ### Version
 ```
