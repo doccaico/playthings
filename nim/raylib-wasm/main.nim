@@ -3,7 +3,7 @@ import raylib
 when defined(emscripten):
   proc emscripten_set_main_loop(fn: proc() {.cdecl.}, a: cint, b: bool) {.importc.}
 
-proc updateDrawFrame*() {.cdecl.} =
+proc updateDrawFrame() {.cdecl.} =
   BeginDrawing()
   ClearBackground(RAYWHITE)
   DrawText("Hello, World", 190, 200, 20, LIGHTGRAY)
