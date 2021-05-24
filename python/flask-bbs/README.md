@@ -7,7 +7,7 @@
 - ページャー
 - 管理画面
 
-<img src="https://github.com/doccaico/flask-bbs/blob/main/screenshot/0.png?raw=true" width="400" height="300"><img src="https://github.com/doccaico/flask-bbs/blob/main/screenshot/1.png?raw=true" width="400" height="300">
+<img src="https://github.com/doccaico/playthings/blob/main/python/flask-bbs/screenshot/0.png?raw=true" width="400" height="300"><img src="https://github.com/doccaico/playthings/blob/main/python/flask-bbs/screenshot/1.png?raw=true" width="400" height="300">
 
 ### バージョンと使用ライブラリ
 
