@@ -7,4 +7,4 @@ $ go run main.go
 ```
 
 ### screenshot
-![calgo](https://gitlab.com/doccaico/calgo/-/raw/master/img/calgo.png)
+![calgo](https://github.com/doccaico/playthings/blob/main/go/calendar/img/calgo.png)
