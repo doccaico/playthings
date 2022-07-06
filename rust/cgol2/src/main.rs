@@ -4,26 +4,33 @@ use rand::thread_rng;
 use std::thread;
 use std::time;
 
-// 2022/07/06
-// cargo build --release
+// 2022/07/07
+// $ cargo build --release
+// $ ls -l ./target/release/cgol2
+// 293280
+// $ ls -lh ./target/release/cgol2
 // 287K
 
 struct Cgol {
     board: Vec<Vec<bool>>,
+    neighbors: Vec<Vec<i32>>,
     col: usize,
     row: usize,
     ratio: f64,
+    delay: time::Duration,
 }
 
 impl Cgol {
 
-    fn new(col: usize, row: usize, ratio: f64) -> Self {
+    fn new(col: usize, row: usize, ratio: f64, delay: u64) -> Self {
 
         let mut g = Cgol {
             board: vec![vec![false; col + 2]; row + 2],
+            neighbors: vec![vec![0; col + 2]; row + 2],
             col: col + 2,
             row: row + 2,
             ratio: ratio,
+            delay: time::Duration::from_millis(delay),
         };
 
         for row in g.board[1..g.row - 1].iter_mut() {
@@ -61,15 +68,13 @@ impl Cgol {
 
     fn update(&mut self) {
 
-        let mut neighbors = vec![vec![0; self.col]; self.row];
-
-        self.count_neighbors(&mut neighbors);
+        self.count_neighbors();
 
         for row in 1..self.row - 1 {
             for col in 1..self.col - 1 {
-                if neighbors[row][col] == 2 {
+                if self.neighbors[row][col] == 2 {
                     // do nothing
-                } else if neighbors[row][col] == 3{
+                } else if self.neighbors[row][col] == 3{
                     self.board[row][col] = true
                 } else {
                     self.board[row][col] = false
@@ -78,11 +83,12 @@ impl Cgol {
         }
     }
 
-    fn count_neighbors(&self, neighbors: &mut Vec<Vec<i32>>) {
+    fn count_neighbors(&mut self) {
         for row in 1..self.row - 1 {
             for col in 1..self.col - 1 {
-                // top-left
-                let count = self.board[row-1][col-1] as i32 +
+                let count =
+                    // top-left
+                    self.board[row-1][col-1] as i32 +
                     // top-middle
                     self.board[row-1][col] as i32 +
                     // top-right
@@ -98,29 +104,31 @@ impl Cgol {
                     // bottom-right
                     self.board[row+1][col+1] as i32;
 
-                neighbors[row][col] = count;
+                self.neighbors[row][col] = count;
             }
         }
     }
 
+    fn sleep(&self) {
+        thread::sleep(self.delay);
+    }
 }
 
 fn main() {
 
-    const WIDTH: usize =  50 + 2;
-    const HEIGHT: usize = 30 + 2;
+    const WIDTH: usize =  50;
+    const HEIGHT: usize = 30;
     const RATIO: f64 = 0.25;
+    const DELAY: u64 = (1000.0 * 0.075) as u64;
 
-    let mut g = Cgol::new(WIDTH, HEIGHT, RATIO);
+    let mut g = Cgol::new(WIDTH, HEIGHT, RATIO, DELAY);
 
     g.randomize();
-
-    let ten_millis = time::Duration::from_millis(100);
 
     loop {
         g.clear();
         g.render();
         g.update();
-        thread::sleep(ten_millis);
+        g.sleep();
     }
 }
