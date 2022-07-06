@@ -121,7 +121,6 @@ fn main() {
         g.clear();
         g.render();
         g.update();
-        // g.info();
         thread::sleep(ten_millis);
     }
 }
