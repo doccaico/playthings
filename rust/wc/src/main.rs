@@ -1,3 +1,5 @@
+// 2022/07/07
+
 #[derive(PartialEq)]
 enum CharKind {
     Space,
