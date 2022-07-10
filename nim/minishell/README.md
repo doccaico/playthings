@@ -12,5 +12,5 @@ Builtin command
 - exit
 
 Link:
-- [https://github.com/brenns10/lsh](brenns10/lsh (C))
-- [https://github.com/JoshMcguigan/bubble-shell](JoshMcguigan/bubble-shell (Rust))
+- [brenns10/lsh (C)](https://github.com/brenns10/lsh)
+- [JoshMcguigan/bubble-shell (Rust)](https://github.com/JoshMcguigan/bubble-shell)
