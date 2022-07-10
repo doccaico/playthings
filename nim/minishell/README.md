@@ -5,7 +5,7 @@
 $ nim r --gc:orc main.nim
 ```
 
-Builtin command
+Builtin Command:
 
 - cd
 - help
