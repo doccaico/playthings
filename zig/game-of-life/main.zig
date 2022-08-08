@@ -83,7 +83,7 @@ fn nextGeneration() void {
     }
 }
 
-fn countNeighbors(y: u64, x: u64) callconv(.Inline) u8 {
+inline fn countNeighbors(y: u64, x: u64) u8 {
     // top-left
     return board[y - 1][x - 1] +
         // top-middle
