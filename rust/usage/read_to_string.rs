@@ -1,3 +1,5 @@
+// https://www.reddit.com/r/rust/comments/enkzaa/trying_to_take_a_list_of_numbers_from_file_io_and/
+
 use std::fs::File;
 use std::io::Read;
 
