@@ -3,7 +3,6 @@ import httpClient
 import sequtils
 import strtabs
 import strutils
-import strutils
 import sugar
 import terminal
 import xmltree
