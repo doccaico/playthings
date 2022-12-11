@@ -6,6 +6,7 @@ The terminal version of the game "Tetris" for GNU/Linux
 ```
 ### Build and Run
 ```
+$ sudo apt install libncurses-dev
 $ zig build run
 ```
 ### Original version
