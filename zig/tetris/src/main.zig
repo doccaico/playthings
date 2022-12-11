@@ -43,7 +43,7 @@ fn new_piece() void {
 fn frame() void {
     var i: usize = 0;
     while (i < 20) : (i += 1) {
-        _ = c.move(@intCast(c_int, 1 + i), 1); // otherwise the box won't draw
+        _ = c.move(@intCast(c_int, 1 + i), 1);
         var j: usize = 0;
         while (j < 10) : (j += 1) {
             if (board[i][j] != 0) {
@@ -114,7 +114,6 @@ fn do_tick() i32 {
     if (tick > 30) {
         tick = 0;
         if (check_hit(x, y + 1, r) != 0) {
-            // if (!y) {
             if (y == 0) {
                 return 0;
             }
