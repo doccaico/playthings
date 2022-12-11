@@ -1,4 +1,4 @@
-## 2048.zig
+## Tetris
 The terminal version of the game "Tetris" for GNU/Linux
 ### Version
 ```
