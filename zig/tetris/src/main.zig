@@ -1,6 +1,8 @@
 // Original: tinytetris https://github.com/taylorconor/tinytetris
 
 const std = @import("std");
+const mem = std.mem;
+const rand = std.rand;
 const c = @import("c.zig");
 
 var x: i32 = 431424;
@@ -23,6 +25,7 @@ var block = [7][4]i32{
     [_]i32{ 614928, 399424, 615744, 428369 },
 };
 var score: i32 = 0;
+var random: rand.Random = undefined;
 
 fn NUM(xx: i32, yy: i32) i32 {
     return 3 & block[@intCast(usize, p)][@intCast(usize, xx)] >> @intCast(u5, yy);
@@ -32,11 +35,14 @@ fn new_piece() void {
     y = 0;
     py = 0;
 
-    p = @rem(c.rand(), 7);
+    // p = @rem(c.rand(), 7);
+    p = random.intRangeAtMost(i32, 0, 7 - 1);
 
-    pr = @rem(c.rand(), 4);
+    // pr = @rem(c.rand(), 4);
+    pr = random.intRangeAtMost(i32, 0, 4 - 1);
     r = pr;
-    px = @rem(c.rand(), (10 - NUM(r, 16)));
+    // px = @rem(c.rand(), (10 - NUM(r, 16)));
+    px = random.intRangeAtMost(i32, 0, (10 - NUM(r, 16)) - 1);
     x = px;
 }
 
@@ -61,7 +67,9 @@ fn frame() void {
 fn set_piece(xx: i32, yy: i32, rr: i32, vv: i32) void {
     var i: i32 = 0;
     while (i < 8) : (i += 2) {
-        board[@intCast(usize, NUM(rr, i * 2) + yy)][@intCast(usize, NUM(rr, (i * 2) + 2) + xx)] = vv;
+        const yyy = @intCast(usize, NUM(rr, i * 2) + yy);
+        const xxx = @intCast(usize, NUM(rr, (i * 2) + 2) + xx);
+        board[yyy][xxx] = vv;
     }
 }
 
@@ -101,7 +109,9 @@ fn check_hit(xx: i32, yy: i32, rr: i32) i32 {
     cc = 0;
     var i: i32 = 0;
     while (i < 8) : (i += 2) {
-        if (board[@intCast(usize, yy + NUM(rr, i * 2))][@intCast(usize, xx + NUM(rr, (i * 2) + 2))] != 0) {
+        const yyy = @intCast(usize, yy + NUM(rr, i * 2));
+        const xxx = @intCast(usize, xx + NUM(rr, (i * 2) + 2));
+        if (board[yyy][xxx] != 0) {
             cc += 1;
         }
     }
@@ -165,7 +175,15 @@ fn runloop() void {
 }
 
 pub fn main() !void {
-    c.srand(@intCast(u32, c.time(0)));
+
+    // c.srand(@intCast(u32, c.time(0)));
+    var prng = std.rand.DefaultPrng.init(blk: {
+        var seed: u64 = undefined;
+        try std.os.getrandom(std.mem.asBytes(&seed));
+        break :blk seed;
+    });
+    random = prng.random();
+
     _ = c.initscr();
     _ = c.start_color();
 
