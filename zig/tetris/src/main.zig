@@ -1,7 +1,6 @@
 // Original: tinytetris https://github.com/taylorconor/tinytetris
 
 const std = @import("std");
-const mem = std.mem;
 const rand = std.rand;
 const c = @import("c.zig");
 
