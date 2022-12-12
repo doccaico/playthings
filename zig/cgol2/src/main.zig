@@ -9,7 +9,7 @@ const mem = std.mem;
 const os = std.os;
 
 const Cgol = struct {
-    gpa: *std.mem.Allocator,
+    gpa: std.mem.Allocator,
     board: [][]u8,
     subboard: [][]u8,
     width: u32,
@@ -24,8 +24,8 @@ const Cgol = struct {
         "printf", "\\33c\\e[3J\\33c",
     };
 
-    fn init(gpa: *std.mem.Allocator, width: u32, height: u32, mark: u8, sleep: f64, cells: u32) !Cgol {
-        var child_process = std.ChildProcess.init(&clear_cmd, gpa.*);
+    fn init(gpa: std.mem.Allocator, width: u32, height: u32, mark: u8, sleep: f64, cells: u32) !Cgol {
+        var child_process = std.ChildProcess.init(&clear_cmd, gpa);
 
         var board = try gpa.alloc([]u8, height + 2);
         for (board) |*col| {
@@ -222,7 +222,7 @@ pub fn main() !void {
     // std.debug.print("sleep: {d}\n", .{sleep});
     // std.debug.print("cells: {d}\n", .{cells});
 
-    var g: Cgol = try Cgol.init(&gpa, width, height, mark, sleep, cells);
+    var g: Cgol = try Cgol.init(gpa, width, height, mark, sleep, cells);
     defer g.deinit();
 
     try g.initBoard();
