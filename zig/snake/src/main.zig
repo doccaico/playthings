@@ -13,8 +13,6 @@ const Point = struct {
     y: i32,
 };
 
-var x: i32 = 0;
-var y: i32 = 0;
 var maxY: i32 = 0;
 var maxX: i32 = 0;
 var nextX: i32 = 0;
@@ -58,7 +56,7 @@ fn curses_init() void {
     maxX = c.getmaxx(c.stdscr);
 }
 
-fn init() !void {
+fn init() void {
     c.srand(@intCast(u32, c.time(0)));
 
     currentDir = .RIGHT;
@@ -128,7 +126,7 @@ fn draw_screen() void {
 
 pub fn main() !void {
     curses_init();
-    try init();
+    init();
 
     var ch: i32 = undefined;
     while (true) {
@@ -139,7 +137,7 @@ pub fn main() !void {
 
         if (gameOver) {
             _ = c.sleep(2);
-            try init();
+            init();
         }
 
         // Input Handler
