@@ -2,7 +2,7 @@ const std = @import("std");
 const builtin = @import("builtin");
 const clap = @import("clap");
 
-// zig version: 0.12.0-dev.1733+648f592db
+// zig version: 0.12.0-dev.1735+bece97ef2
 // test: cmd.exe and powershell.exe
 // https://gist.github.com/doccaico/b503c562698bf77dbbee56fd47806f66
 
@@ -81,9 +81,6 @@ pub fn main() !void {
     var input = std.ArrayList(u8).init(gpa);
     defer input.deinit();
 
-    const args = try std.process.argsAlloc(gpa);
-    defer std.process.argsFree(gpa, args);
-
     const params = comptime clap.parseParamsComptime(
         \\-h, --help               Display this help and exit.
         \\-b, --number-nonblank    number nonempty output lines, overrides -n
@@ -101,6 +98,8 @@ pub fn main() !void {
         return err;
     };
     defer res.deinit();
+
+    const exe = res.exe_arg.?;
 
     if (res.args.help != 0)
         return clap.help(stderr, clap.Help, &params, .{});
@@ -122,15 +121,15 @@ pub fn main() !void {
         for (res.positionals) |path| {
             const file = std.fs.cwd().openFile(path, .{ .mode = .read_only }) catch |err| switch (err) {
                 error.FileNotFound => {
-                    try stderr.print("{s}: {s}: No such file or directory\n", .{ args[0], path });
+                    try stderr.print("{s}: {s}: No such file or directory\n", .{ exe, path });
                     continue;
                 },
                 error.IsDir => {
-                    try stderr.print("{s}: {s}: Is a directory\n", .{ args[0], path });
+                    try stderr.print("{s}: {s}: Is a directory\n", .{ exe, path });
                     continue;
                 },
                 else => {
-                    try stderr.print("{s}: {s}: An error occured: {}\n", .{ args[0], path, err });
+                    try stderr.print("{s}: {s}: An error occured: {}\n", .{ exe, path, err });
                     continue;
                 },
             };
