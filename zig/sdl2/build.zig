@@ -25,8 +25,8 @@ pub fn build(b: *std.Build) void {
     });
 
     // SDL2
-    exe.addIncludePath(.{ .path = "deps/SDL2-2.28.5/x86_64-w64-mingw32/include" });
-    exe.addLibraryPath(.{ .path = "deps/SDL2-2.28.5/x86_64-w64-mingw32/lib" });
+    exe.addIncludePath(.{ .path = "C:/libs/SDL2-2.28.5/x86_64-w64-mingw32/include" });
+    exe.addLibraryPath(.{ .path = "C:/libs/SDL2-2.28.5/x86_64-w64-mingw32/lib" });
 
     exe.linkSystemLibrary("SDL2");
     exe.linkSystemLibrary("gdi32");
@@ -39,9 +39,9 @@ pub fn build(b: *std.Build) void {
     exe.linkSystemLibrary("winmm");
 
     // SDL2_ttf
-    // exe.addIncludePath(.{ .path = "deps/SDL2-2.28.5/x86_64-w64-mingw32/include/SDL2" });
-    // exe.addIncludePath(.{ .path = "deps/SDL2_ttf-2.20.2/x86_64-w64-mingw32/include" });
-    // exe.addLibraryPath(.{ .path = "deps/SDL2_ttf-2.20.2/x86_64-w64-mingw32/lib" });
+    // exe.addIncludePath(.{ .path = "C:/libs/SDL2-2.28.5/x86_64-w64-mingw32/include/SDL2" });
+    // exe.addIncludePath(.{ .path = "C:/libs/SDL2_ttf-2.20.2/x86_64-w64-mingw32/include" });
+    // exe.addLibraryPath(.{ .path = "C:/libs/SDL2_ttf-2.20.2/x86_64-w64-mingw32/lib" });
     //
     // exe.linkSystemLibrary("SDL2_ttf");
     // exe.linkSystemLibrary("rpcrt4"); // SDL2_ttf

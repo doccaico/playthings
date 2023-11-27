@@ -8,3 +8,5 @@ test: Windows 11
 ```
 zig build run
 ```
+
+See build.zig ... :)
