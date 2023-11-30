@@ -62,7 +62,6 @@ func (a *App) display() {
 	for i, e := range a.message[:20] {
 		m := fmt.Sprintf("・[%04s] %s\n", a.number[i], strings.TrimSpace(e))
 		emitStr(a.screen, 0, i, tcell.StyleDefault, m)
-
 	}
 
 	// emitStr(a.screen, 0, 22, tcell.StyleDefault, fmt.Sprintf("pages len = %d\n", len(a.pages)))
