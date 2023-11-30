@@ -19,6 +19,7 @@ const USAGE = `
 
 type App struct {
 	collector *colly.Collector
+	screen    tcell.Screen
 	url       string
 	message   []string
 	number    []string
@@ -26,25 +27,52 @@ type App struct {
 }
 
 func newApp(id string) *App {
+
+	encoding.Register()
+
+	s, e := tcell.NewScreen()
+	if e != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", e)
+		os.Exit(1)
+	}
+	if e := s.Init(); e != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", e)
+		os.Exit(1)
+	}
+
+	defStyle := tcell.StyleDefault.
+		Background(tcell.ColorBlack).
+		Foreground(tcell.ColorWhite)
+	s.SetStyle(defStyle)
+
+	c := colly.NewCollector()
+	c.AllowURLRevisit = true
+
 	return &App{
-		collector: colly.NewCollector(),
+		collector: c,
+		screen:    s,
 		url:       fmt.Sprintf("https://b.2ch2.net/test/read.cgi/zatsudan/%s/-", id),
 	}
 }
 
-func (a *App) display(s tcell.Screen) {
+func (a *App) display() {
 
-	s.Clear()
+	a.screen.Clear()
 
 	for i, e := range a.message[:20] {
 		m := fmt.Sprintf("・[%04s] %s\n", a.number[i], strings.TrimSpace(e))
-		emitStr(s, 0, i, tcell.StyleDefault, m)
+		emitStr(a.screen, 0, i, tcell.StyleDefault, m)
+
 	}
 
-	// mm := fmt.Sprintf("len = %d\n", len(a.message))
-	// emitStr(s, 0, 0, tcell.StyleDefault, mm)
+	// emitStr(a.screen, 0, 22, tcell.StyleDefault, fmt.Sprintf("pages len = %d\n", len(a.pages)))
+	// emitStr(a.screen, 0, 23, tcell.StyleDefault, fmt.Sprintf("pages = %v\n", a.pages))
+	// emitStr(a.screen, 0, 24, tcell.StyleDefault, fmt.Sprintf("prev = %d\n", a.prev))
+	// emitStr(a.screen, 0, 25, tcell.StyleDefault, fmt.Sprintf("next = %d\n", a.next))
+	// emitStr(a.screen, 0, 26, tcell.StyleDefault, fmt.Sprintf("app.pages[app.next] = %s\n", a.pages[a.next]))
+	// emitStr(a.screen, 0, 27, tcell.StyleDefault, fmt.Sprintf("message = %v\n", a.message))
 
-	s.Show()
+	a.screen.Show()
 }
 
 func (a *App) scrape(page string) {
@@ -70,10 +98,7 @@ func (a *App) scrape(page string) {
 
 	prev--
 
-	s := strconv.Itoa(prev)
-
-	a.pages = append(a.pages, s)
-
+	a.pages = append(a.pages, strconv.Itoa(prev))
 }
 
 func emitStr(s tcell.Screen, x, y int, style tcell.Style, str string) {
@@ -97,45 +122,27 @@ func main() {
 		os.Exit(1)
 	}
 
-	id := os.Args[1]
-
-	encoding.Register()
-
-	s, e := tcell.NewScreen()
-	if e != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", e)
-		os.Exit(1)
-	}
-	if e := s.Init(); e != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", e)
-		os.Exit(1)
-	}
-
-	defStyle := tcell.StyleDefault.
-		Background(tcell.ColorBlack).
-		Foreground(tcell.ColorWhite)
-	s.SetStyle(defStyle)
-
-	app := newApp(id)
+	app := newApp(os.Args[1])
 
 	app.scrape("9999")
 
-	app.display(s)
+	app.display()
 
 	for {
-		switch ev := s.PollEvent().(type) {
+		switch ev := app.screen.PollEvent().(type) {
 		case *tcell.EventResize:
-			s.Sync()
-			app.display(s)
+			app.screen.Sync()
+			app.display()
 		case *tcell.EventKey:
 			if ev.Key() == tcell.KeyEscape {
-				s.Fini()
+				app.screen.Fini()
 				os.Exit(0)
 			}
-			if ev.Rune() == 'j' {
+			// prev
+			if ev.Rune() == 'h' {
 				i := len(app.pages) - 1
 				app.scrape(app.pages[i])
-				app.display(s)
+				app.display()
 			}
 		}
 	}
