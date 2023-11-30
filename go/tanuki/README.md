@@ -10,3 +10,5 @@ $ go build -ldflags="-s -w" -trimpath
 ```
 (例) $ tanuki 1467456
 ```
+
+前のページ: `j`
