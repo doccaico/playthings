@@ -14,7 +14,9 @@ import (
 )
 
 const USAGE = `
-  (例) $ tanuki 1467456
+Usage:
+
+  $ tanuki 0123456789
 `
 
 type App struct {
@@ -23,7 +25,10 @@ type App struct {
 	url       string
 	message   []string
 	number    []string
-	pages     []string
+	current   int
+	prev      int
+	next      int
+	stopper   int
 }
 
 func newApp(id string) *App {
@@ -59,22 +64,29 @@ func (a *App) display() {
 
 	a.screen.Clear()
 
-	for i, e := range a.message[:20] {
+	n := 0
+	if a.current < 20 {
+		n = a.current
+	} else if a.stopper < 20 {
+		n = a.stopper
+	} else {
+		n = 20
+	}
+
+	for i, e := range a.message[:n] {
 		m := fmt.Sprintf("・[%04s] %s\n", a.number[i], strings.TrimSpace(e))
 		emitStr(a.screen, 0, i, tcell.StyleDefault, m)
 	}
 
-	// emitStr(a.screen, 0, 22, tcell.StyleDefault, fmt.Sprintf("pages len = %d\n", len(a.pages)))
-	// emitStr(a.screen, 0, 23, tcell.StyleDefault, fmt.Sprintf("pages = %v\n", a.pages))
-	// emitStr(a.screen, 0, 24, tcell.StyleDefault, fmt.Sprintf("prev = %d\n", a.prev))
-	// emitStr(a.screen, 0, 25, tcell.StyleDefault, fmt.Sprintf("next = %d\n", a.next))
-	// emitStr(a.screen, 0, 26, tcell.StyleDefault, fmt.Sprintf("app.pages[app.next] = %s\n", a.pages[a.next]))
-	// emitStr(a.screen, 0, 27, tcell.StyleDefault, fmt.Sprintf("message = %v\n", a.message))
+	emitStr(a.screen, 0, 23, tcell.StyleDefault, fmt.Sprintf("URL:     %s%d\n", a.url, a.current))
+	emitStr(a.screen, 0, 24, tcell.StyleDefault, fmt.Sprintf("Prev(h): %s%d\n", a.url, a.prev))
+	emitStr(a.screen, 0, 25, tcell.StyleDefault, fmt.Sprintf("Next(l): %s%d\n", a.url, a.next))
+	// emitStr(a.screen, 0, 26, tcell.StyleDefault, fmt.Sprintf("stopper: %d\n", a.stopper))
 
 	a.screen.Show()
 }
 
-func (a *App) scrape(page string) {
+func (a *App) scrape(page int) {
 
 	a.message = nil
 	a.number = nil
@@ -88,16 +100,53 @@ func (a *App) scrape(page string) {
 		a.number = append(a.number, n)
 	})
 
-	a.collector.Visit(a.url + page)
+	a.collector.Visit(a.url + strconv.Itoa(page))
 
-	prev, err := strconv.Atoi(a.number[0])
-	if err != nil {
-		fmt.Printf("%sを変換出来ませんでした\n", a.number[0])
+	a.setCurrent(page)
+	a.setPrev()
+	a.setNext()
+}
+
+func (a *App) setCurrent(p int) {
+	if p == 9999 {
+		n, err := strconv.Atoi(a.number[len(a.number)-1])
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "cannot convert %q\n", a.number[0])
+			os.Exit(1)
+		}
+		a.stopper = n
+	}
+	if p != a.stopper {
+		a.current = p
+	} else {
+		a.current = 9999
+	}
+}
+
+func (a *App) setPrev() {
+	if a.current == 9999 && a.stopper < 20 {
+		a.prev = 9999
+		return
 	}
 
-	prev--
+	if a.current > 20 {
 
-	a.pages = append(a.pages, strconv.Itoa(prev))
+		n, err := strconv.Atoi(a.number[0])
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "cannot convert %q\n", a.number[0])
+			os.Exit(1)
+		}
+
+		a.prev = n - 1
+	}
+}
+
+func (a *App) setNext() {
+	if a.current == 9999 {
+		a.next = a.current
+	} else {
+		a.next = a.current + 20
+	}
 }
 
 func emitStr(s tcell.Screen, x, y int, style tcell.Style, str string) {
@@ -123,7 +172,7 @@ func main() {
 
 	app := newApp(os.Args[1])
 
-	app.scrape("9999")
+	app.scrape(9999)
 
 	app.display()
 
@@ -137,10 +186,14 @@ func main() {
 				app.screen.Fini()
 				os.Exit(0)
 			}
-			// prev
-			if ev.Rune() == 'h' {
-				i := len(app.pages) - 1
-				app.scrape(app.pages[i])
+			switch ev.Rune() {
+			// prev page
+			case 'h':
+				app.scrape(app.prev)
+				app.display()
+			// next page
+			case 'l':
+				app.scrape(app.next)
 				app.display()
 			}
 		}

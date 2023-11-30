@@ -8,7 +8,12 @@ $ go build -ldflags="-s -w" -trimpath
 **Usage**
 
 ```
-(例) $ tanuki 1467456
+Usage:
+
+  $ tanuki 0123456789
 ```
 
-前のページ: `j`
+**Keybind**
+
+Prev: `h`  
+Next: `l`
