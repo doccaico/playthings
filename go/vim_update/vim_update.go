@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 )
@@ -123,5 +124,10 @@ func main() {
 		s := fmt.Errorf("downloadFile is return error: %w", err)
 		log.Fatal(s)
 	}
+
+	dl_dir := filepath.Join(userprofile, "Downloads")
+	fmt.Printf("[Open] explorer.exe ... %q\n", dl_dir)
+	cmd := exec.Command("explorer.exe", dl_dir)
+	cmd.Run()
 
 }
