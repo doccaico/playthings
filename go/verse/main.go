@@ -203,8 +203,15 @@ func setRandomValue() {
 
 	target_title = (*p)[i].title
 
-	i = r.Intn((*p)[i].max_page-1) + 1
-	target_chapter = strconv.Itoa(i)
+	if (*p)[i].max_page == 1 {
+		target_chapter = strconv.Itoa(1)
+	} else if (*p)[i].max_page == 2 {
+		i = r.Intn(2) + 1
+		target_chapter = strconv.Itoa(i)
+	} else {
+		i = r.Intn((*p)[i].max_page-1) + 1
+		target_chapter = strconv.Itoa(i)
+	}
 }
 
 func main() {
