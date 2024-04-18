@@ -26,9 +26,9 @@ pub struct ListItem<'a> {
 impl<'a> ListItem<'a> {
     pub fn new(title: &'a str, url: &'a str, max_chapter: usize) -> Self {
         Self {
-            title: title,
-            url: url,
-            max_chapter: max_chapter,
+            title,
+            url,
+            max_chapter,
             chapter: String::new(),
             prefix: None,
         }
@@ -41,12 +41,11 @@ impl<'a> ListItem<'a> {
 
     fn get_line(self) -> String {
         let chapter = format!("({:0>3}/{:0>3})", self.chapter, self.max_chapter);
-        let text = if let Some(prefix) = self.prefix {
+        if let Some(prefix) = self.prefix {
             combine_text(self.title, prefix, chapter)
         } else {
             combine_text(self.title, "  ", chapter)
-        };
-        text
+        }
     }
 }
 
@@ -204,8 +203,7 @@ fn get_verse(url: &str, id: &String) -> String {
         .collect::<Vec<String>>()
         .join("")
         .replace("\n[", "[");
-
-    return result;
+    result
 }
 
 #[derive(Debug)]
@@ -222,9 +220,9 @@ fn init_setting() -> Setting {
         random: false,
     };
 
-    let mut iter = env::args().skip(1);
+    let iter = env::args().skip(1);
 
-    while let Some(arg) = iter.next() {
+    for arg in iter {
         match arg.as_str() {
             "-o" => setting.old_testament = true,
             "-n" => setting.new_testament = true,
@@ -577,7 +575,7 @@ fn get_new_testament<'a>() -> Vec<ListItem<'a>> {
     ]
 }
 
-fn get_random_value<'a>(testament: Vec<ListItem<'a>>) -> (&'a str, &'a str, String, usize) {
+fn get_random_value(testament: Vec<ListItem<'_>>) -> (&str, &str, String, usize) {
     let mut rng = rand::thread_rng();
     let index = rng.gen_range(0..testament.len());
     let chapter = rng.gen_range(1..=testament[index].max_chapter);
