@@ -1,0 +1,23 @@
+[package]
+name = "verse"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0"
+crossterm = "0.27.0"
+rand = "0.8.5"
+ratatui = "0.26.2"
+regex = { version = "1.10.4", default-features = false, features = ["std" ,"unicode-perl"] }
+reqwest = { version = "0.12", features = ["blocking"] }
+scraper = "0.19.0"
+tui-widget-list = "0.8.2"
+
+[profile.release]
+strip = true
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "abort"
