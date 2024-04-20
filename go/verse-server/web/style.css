@@ -1,0 +1,25 @@
+div#container {
+  display: flex;
+}
+
+div#ja {
+  width: 50%;
+  height: 100px;
+  padding: 0 40px 0 40px;
+}
+
+div#ja em {
+  font-weight: bold;
+  margin: 0 4% 0 0;
+}
+
+div#en {
+  width: 50%;
+  height: 100px;
+  padding: 0 40px 0 40px;
+}
+
+div#en dt{
+    float: left;
+    margin-right: 5;
+}

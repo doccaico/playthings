@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>聖書</title>
+    <link rel="stylesheet" href="../web/style.css" type="text/css">
+  </head>
+  <body>
+    <h1><a href="/">聖書</a></h1>
+    <p>{{ .TitleJa }} : {{ .TitleEn }} ({{ .Chapter }}/{{ .MaxChapter }})</p>
+    <p><a href="/random/">ランダム表示</a></p>
+    <div id="container">
+      <div id="ja">
+        {{ .BodyJa }}
+        <p><a href="{{ .UrlJa }}">{{ .UrlJa }}</a></p>
+      </div>
+      <div id="en">
+        {{ .BodyEn }}
+        <p><a href="{{ .UrlEn }}">{{ .UrlEn }}</a></p>
+      </div>
+    </div>
+  </body>
+</html>

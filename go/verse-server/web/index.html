@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>聖書</title>
+    <link rel="stylesheet" href="web/style.css" type="text/css">
+  </head>
+  <body>
+    <h1>聖書</h1>
+    <p><a href="/random/">ランダム表示</a></p>
+    <div id="container">
+      <div id="ja">
+        <p>旧約聖書</p>
+        <ul>
+          {{ range $i, $v := .Ot }}
+            <p>{{ $v.Title }}</p>
+            {{ range $j := $v.Chapter }}
+              <a href="/pages/?version=ot&page={{ $i }}&chapter={{ $j }}">{{ $j }}</a>
+            {{ end  }}
+          {{ end }}
+        </ul>
+      </div>
+      <div id="en">
+        <p>新約聖書</p>
+          {{ range $i, $v := .Nt }}
+            <p>{{ $v.Title }}</p>
+            {{ range $j := $v.Chapter }}
+              <a href="/pages/?version=ot&page={{ $i }}&chapter={{ $j }}">{{ $j }}</a>
+            {{ end  }}
+          {{ end }}
+      </div>
+    </div>
+  </body>
+</html>
