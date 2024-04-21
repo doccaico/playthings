@@ -22,12 +22,14 @@
       </div>
       <div id="en">
         <p>新約聖書</p>
+        <ul>
           {{ range $i, $v := .Nt }}
             <p>{{ $v.Title }}</p>
             {{ range $j := $v.Chapter }}
               <a href="/pages/?version=nt&page={{ $i }}&chapter={{ $j }}">{{ $j }}</a>
             {{ end  }}
           {{ end }}
+        </ul>
       </div>
     </div>
   </body>
