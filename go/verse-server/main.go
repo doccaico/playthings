@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand/v2"
 	"net/http"
+	"os/exec"
 	"strconv"
 	"text/template"
 )
@@ -80,7 +81,7 @@ func setPagesValue(r *http.Request) {
 	target_title_ja = (*bible)[p].Title_ja
 	target_title_en = (*bible)[p].Title_en
 	target_url_ja = fmt.Sprintf("http://bible.salterrae.net/kougo/html/%s.html", (*bible)[p].Url_ja)
-	target_url_en = fmt.Sprintf("https://web.mit.edu/jywang/www/cef/Bible/NIV/NIV_Bible/%s+%s.html", (*bible)[p].Url_en, target_chapter)
+	target_url_en = fmt.Sprintf("https://web.mit.edu/jywang/www/cef/Bible/NIV/NIV_Bible/%s+%s.html", (*bible)[p].Url_en, r.FormValue("chapter"))
 	target_chapter = r.FormValue("chapter")
 	target_max_page = (*bible)[p].Max_page
 
@@ -174,5 +175,12 @@ func main() {
 	http.HandleFunc("/", handlerIndex)
 	http.HandleFunc("/pages/", handlerPages)
 	http.HandleFunc("/random/", handlerRandom)
+
+	// https://gist.github.com/sevkin/9798d67b2cb9d07cb05f89f14ba682f8
+	cmd := exec.Command("cmd", "/c", "start", "http://localhost:8080/")
+	if err := cmd.Run(); err != nil {
+		fmt.Println("Error: ", err)
+	}
+
 	http.ListenAndServe(":8080", nil)
 }

@@ -25,7 +25,7 @@
           {{ range $i, $v := .Nt }}
             <p>{{ $v.Title }}</p>
             {{ range $j := $v.Chapter }}
-              <a href="/pages/?version=ot&page={{ $i }}&chapter={{ $j }}">{{ $j }}</a>
+              <a href="/pages/?version=nt&page={{ $i }}&chapter={{ $j }}">{{ $j }}</a>
             {{ end  }}
           {{ end }}
       </div>
