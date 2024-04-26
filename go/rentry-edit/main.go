@@ -80,13 +80,13 @@ func post_file(id string, edit_code string, file string, token string) []byte {
 
 func main() {
 
-	if len(os.Args) != 7 {
-		panic("Usage: rentry-edit --id xe2nf929 --edit-code 1234 --file file.txt")
+	if len(os.Args) != 4 {
+		panic("Usage: rentry-edit xe2nf929 xxxx1234 file.txt")
 	}
 
-	id := os.Args[2]
-	edit_code := os.Args[4]
-	file := os.Args[6]
+	id := os.Args[1]
+	edit_code := os.Args[2]
+	file := os.Args[3]
 
 	token := get_token()
 
