@@ -98,11 +98,11 @@ func main() {
 	}
 
 	if res_json.Status != "200" {
-		panic(fmt.Sprintf(`status: wants "200", but got "%s"` + res_json.Status))
+		panic(fmt.Sprintf(`status: wants "200", but got "%s"`, res_json.Status))
 	}
 
 	if res_json.Content != "OK" {
-		panic(fmt.Sprintf(`content: wants "OK", but got "%s"` + res_json.Content))
+		panic(fmt.Sprintf(`content: wants "OK", but got "%s"`, res_json.Content))
 	}
 
 	fmt.Printf("Successfully edited the %s/%s", BASE_URL, id)
