@@ -12,7 +12,9 @@ import (
 	"strings"
 )
 
-// Referance: https://github.com/agamsol/rentry
+// *Referance*
+// https://github.com/agamsol/rentry
+// https://github.com/radude/rentry
 
 const BASE_URL = "https://rentry.co"
 
@@ -36,6 +38,12 @@ func get_token() string {
 	}
 	defer resp.Body.Close()
 
+	// // サーバーがおかしい時は "403 Forbidden" が返ってくる
+	// println(resp.Status)
+	// // サーバーがおかしい時は "Set-Cookie" が無い
+	// for k, v := range resp.Header {
+	// 	fmt.Printf("%#v %#v\n", k, v)
+	// }
 	token := strings.Split(strings.Split(resp.Header["Set-Cookie"][0], "; ")[0], "=")[1]
 
 	return token
