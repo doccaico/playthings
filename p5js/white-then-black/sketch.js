@@ -10,7 +10,6 @@ let level = 1;
 
 function setup() {
   let canvas = createCanvas(screen_width, screen_height);
-  canvas.parent('sketch-holder')
   background(200);
 }
 
