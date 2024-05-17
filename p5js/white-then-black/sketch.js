@@ -19,7 +19,7 @@ function draw() {
   if (level > harf) {
     fill(0);
   }
-  describe('<a href="https://github.com/doccaico/playthings/tree/main/p5js/white-then-black">[Source]</a> White Then Black', LABEL);
+  describe('<a href="https://github.com/doccaico/playthings/tree/main/p5js/white-then-black/">[Source]</a> White Then Black', LABEL);
 }
 
 function from_top(y) {
