@@ -9,7 +9,7 @@ let bottom_x = screen_width - circle_radius;
 let level = 1;
 
 function setup() {
-  let canvas = createCanvas(screen_width, screen_height);
+  createCanvas(screen_width, screen_height);
   background(200);
 }
 
