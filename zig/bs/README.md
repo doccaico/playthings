@@ -5,7 +5,7 @@
 $ zig build -Doptimize=ReleaseFast
 
 # show help message
-$ .\zig-out\bin\chip8-disassembler-zig.exe -h
+$ .\zig-out\bin\bs.exe -h
 ```
 
 ## Zig version
