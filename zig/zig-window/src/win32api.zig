@@ -1,0 +1,40 @@
+const win32 = @import("win32");
+
+pub usingnamespace @import("win32").everything;
+
+// pub const MessageBox = win32.ui.windows_and_messaging.MessageBox;
+// pub const MB_OK = win32.ui.windows_and_messaging.MB_OK;
+// pub const DefWindowProc = win32.ui.windows_and_messaging.DefWindowProc;
+// pub const PostQuitMessage = win32.ui.windows_and_messaging.PostQuitMessage;
+// pub const WNDCLASS = win32.ui.windows_and_messaging.WNDCLASS;
+// pub const CS_HREDRAW = win32.ui.windows_and_messaging.CS_HREDRAW;
+// pub const CS_VREDRAW = win32.ui.windows_and_messaging.CS_VREDRAW;
+// pub const WNDCLASS_STYLES = win32.ui.windows_and_messaging.WNDCLASS_STYLES;
+// pub const WM_DESTROY = win32.ui.windows_and_messaging.WM_DESTROY;
+// pub const LoadIcon = win32.ui.windows_and_messaging.LoadIcon;
+// pub const LoadCursor = win32.ui.windows_and_messaging.LoadCursor;
+// pub const IDI_APPLICATION = win32.ui.windows_and_messaging.IDI_APPLICATION;
+// pub const IDC_ARROW = win32.ui.windows_and_messaging.IDC_ARROW;
+// pub const RegisterClass = win32.ui.windows_and_messaging.RegisterClass;
+// pub const GetMessage = win32.ui.windows_and_messaging.GetMessage;
+// pub const DispatchMessage = win32.ui.windows_and_messaging.DispatchMessage;
+// pub const MSG = win32.ui.windows_and_messaging.MSG;
+// pub const WINDOW_STYLE = win32.ui.windows_and_messaging.WINDOW_STYLE;
+// pub const WS_OVERLAPPEDWINDOW = win32.ui.windows_and_messaging.WS_OVERLAPPEDWINDOW;
+// pub const WS_VISIBLE = win32.ui.windows_and_messaging.WS_VISIBLE;
+// pub const WS_SYSMENU = win32.ui.windows_and_messaging.WS_SYSMENU;
+// pub const CreateWindowEx = win32.ui.windows_and_messaging.CreateWindowEx;
+// pub const WS_EX_TOOLWINDOW = win32.ui.windows_and_messaging.WS_EX_TOOLWINDOW;
+// pub const GetStockObject = win32.graphics.gdi.GetStockObject;
+// pub const WHITE_BRUSH = win32.graphics.gdi.WHITE_BRUSH;
+// pub const HWND = win32.foundation.HWND;
+
+pub const WINAPI = @import("std").os.windows.WINAPI;
+pub const LPWSTR = @import("std").os.windows.LPWSTR;
+pub const INT = @import("std").os.windows.INT;
+pub const UINT = @import("std").os.windows.UINT;
+// pub const HINSTANCE = @import("std").os.windows.HINSTANCE;
+// pub const PWSTR = @import("std").os.windows.PWSTR;
+// pub const WPARAM = @import("std").os.windows.WPARAM;
+// pub const LPARAM = @import("std").os.windows.LPARAM;
+// pub const LRESULT = @import("std").os.windows.LRESULT;
