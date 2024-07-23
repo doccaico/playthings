@@ -50,8 +50,8 @@ main :: proc() {
 
 	arena: virtual.Arena
 	a_err := virtual.arena_init_static(&arena)
-    log.assert(a_err == nil, fmt.tprintf("Failed to init memory arena (%s)", a_err))
-    arena_allocator := virtual.arena_allocator(&arena)
+	log.assert(a_err == nil, fmt.tprintf("Failed to init memory arena (%s)", a_err))
+	arena_allocator := virtual.arena_allocator(&arena)
 	defer virtual.arena_destroy(&arena);
 
 	context.allocator = arena_allocator;
