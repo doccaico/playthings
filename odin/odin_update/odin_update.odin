@@ -13,7 +13,11 @@ import "core:strings"
 
 // Date: 2024/07/23
 // Odin version: dev-2024-07-nightly:ef84382
+
+// :: Debug
 // Run: odin build odin_update.odin -file && .\odin_update.exe (on Windows)
+// :: Release
+// odin build odin_update.odin -file -o:speed  -no-bounds-check
 
 // Required softwares
 // Windows: curl, 7za
