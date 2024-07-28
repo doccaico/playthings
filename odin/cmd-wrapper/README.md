@@ -1,6 +1,6 @@
 ### cmd-wrapper for me (. .;)
 
-```odin
+```
 Usage: cmd-wrapper.exe [cmd] args
   cmd:
     cp: copy a file or directory
@@ -10,7 +10,7 @@ Usage: cmd-wrapper.exe [cmd] args
 
 ### Build
 
-```bat
+```cmd
 ;; Debug Build
 
 odin build main.odin -file -out:cmd-wrapper.exe [-debug]
