@@ -10,12 +10,12 @@ Usage: cmd-wrapper.exe [cmd] args
 
 ### Build
 
-```cmd
-;; Debug Build
+```sh
+# Debug Build
 
 odin build main.odin -file -out:cmd-wrapper.exe [-debug]
 
-;; Release Build
+# Release Build
 
 odin build main.odin -file -out:cmd-wrapper.exe -o:speed -no-bounds-check
 ```
