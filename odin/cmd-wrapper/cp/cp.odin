@@ -8,6 +8,7 @@ import "core:strings"
 USAGE :: `
 Usage: cp.exe [options] [src] [dist]	
   Options:
+    -h: show a help message
     -r: directory
 `
 
@@ -24,7 +25,10 @@ run :: proc(args: []string) {
 
 	for arg in args {
 		if arg[0] == '-' {
-			if arg[1] == 'r' {
+			if arg[1] == 'h' {
+				fmt.println(USAGE)
+				os.exit(1)
+			} else if arg[1] == 'r' {
 				opts.recurse = true
 			} else {
 				fmt.println(USAGE)

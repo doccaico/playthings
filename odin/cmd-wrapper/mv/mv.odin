@@ -7,11 +7,25 @@ import "core:strings"
 
 USAGE :: `
 Usage: mv.exe [src] [dist]	
+  Options:
+    -h: show a help message
 `
 
 run :: proc(args: []string) {
 
 	// fmt.println(args)
+
+	for arg in args {
+		if arg[0] == '-' {
+			if arg[1] == 'h' {
+				fmt.println(USAGE)
+				os.exit(1)
+			} else {
+				fmt.println(USAGE)
+				os.exit(1)
+			}
+		}
+	}
 
 	if len(args) != 2 {
 		fmt.println(USAGE)
