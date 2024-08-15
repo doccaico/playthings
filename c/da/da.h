@@ -1,5 +1,5 @@
-#ifndef INCLUDE_DA_ARRAY_H
-#define INCLUDE_DA_ARRAY_H
+#ifndef INCLUDE_DA_H
+#define INCLUDE_DA_H
 
 #include <stdlib.h> // for 'realloc' 'free'
 
@@ -48,4 +48,4 @@
 
 #define da_get_last(da) (da)->items[(da)->len-1]
 
-#endif // INCLUDE_DA_ARRAY_H
+#endif // INCLUDE_DA_H
