@@ -11,9 +11,7 @@ const math = std.math;
 const mem = std.mem;
 const process = std.process;
 
-
 var arena: std.heap.ArenaAllocator = undefined;
-
 
 fn help(writer: anytype) !void {
     try writer.writeAll("Usage: mymd hoge.md\n");
@@ -46,14 +44,13 @@ pub fn main() !void {
     const pos = mem.indexOf(u8, md, "{{ . }}") orelse return error.templFileIsWeird;
     try stdout.print("{s}\n", .{md[0..pos]});
 
-
     // markdownの変換
     const file = try cwd.openFile(args[1], .{});
     defer file.close();
-    var buf: [1024*2]u8 = undefined;
+    var buf: [1024 * 2]u8 = undefined;
     var fbs = io.fixedBufferStream(&buf);
-    while (true): (fbs.reset()) {
-        file.reader().streamUntilDelimiter(fbs.writer(), '\n', buf.len) catch |err| switch(err) {
+    while (true) : (fbs.reset()) {
+        file.reader().streamUntilDelimiter(fbs.writer(), '\n', buf.len) catch |err| switch (err) {
             error.EndOfStream => break,
             else => return err,
         };
@@ -63,11 +60,11 @@ pub fn main() !void {
         const line = blk: {
             if (output.len == 0) break :blk null;
             if (mem.startsWith(u8, output, "##### ")) {
-                break :blk try mem.concat(allocator, u8,  &[_][]const u8{"<h5>", output[6..] ,"</h5>"});
+                break :blk try mem.concat(allocator, u8, &[_][]const u8{ "<h5>", output[6..], "</h5>" });
             } else if (mem.startsWith(u8, output, "###### ")) {
-                break :blk try mem.concat(allocator, u8,  &[_][]const u8{"<h6>", output[7..] ,"</h6>"});
+                break :blk try mem.concat(allocator, u8, &[_][]const u8{ "<h6>", output[7..], "</h6>" });
             } else {
-                break :blk try mem.concat(allocator, u8,  &[_][]const u8{"<p>", output[0..] ,"</p>"});
+                break :blk try mem.concat(allocator, u8, &[_][]const u8{ "<p>", output[0..], "</p>" });
             }
         };
         if (line) |s| {
@@ -76,5 +73,5 @@ pub fn main() !void {
     }
 
     // {{ . }} から後の部分を出力する
-    try stdout.print("{s}\n", .{md[pos+7..]});
+    try stdout.print("{s}\n", .{md[pos + 7 ..]});
 }
