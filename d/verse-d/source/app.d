@@ -10,8 +10,8 @@ import parserino;
 
 void help() {
     writeln("A program to read bible.
-            Usage: verse [Chapter] [Page]
-            Exsample: verse GEN 1");
+            Usage: verse-d [Chapter] [Page]
+            Exsample: verse-d GEN 1");
 }
 
 string alignNumber(string text)

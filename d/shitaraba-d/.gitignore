@@ -1,0 +1,16 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/shitaraba-d
+shitaraba-d.so
+shitaraba-d.dylib
+shitaraba-d.dll
+shitaraba-d.a
+shitaraba-d.lib
+shitaraba-d-test-*
+*.exe
+*.pdb
+*.o
+*.obj
+*.lst
