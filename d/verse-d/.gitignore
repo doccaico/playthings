@@ -1,0 +1,16 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/verse_d
+verse_d.so
+verse_d.dylib
+verse_d.dll
+verse_d.a
+verse_d.lib
+verse_d-test-*
+*.exe
+*.pdb
+*.o
+*.obj
+*.lst

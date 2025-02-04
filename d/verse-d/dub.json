@@ -1,0 +1,12 @@
+{
+	"authors": [
+		"doccaico"
+	],
+	"copyright": "Copyright © 2025, doccaico",
+	"dependencies": {
+		"parserino": "~>0.2.7"
+	},
+	"description": "A minimal D application.",
+	"license": "MIT",
+	"name": "verse-d"
+}
