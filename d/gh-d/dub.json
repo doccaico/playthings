@@ -1,0 +1,21 @@
+{
+    "authors": [
+        "doccaico"
+    ],
+    "copyright": "Copyright © 2025, doccaico",
+    "dependencies": {
+        "d2sqlite3": "~>1.0.0"
+    },
+    "description": "A minimal D application.",
+    "license": "MIT",
+    "name": "gh-d",
+    "targetType": "executable",
+    "configurations" : [
+        {
+            "name": "default",
+            "subConfigurations": {
+                "d2sqlite3": "all-included"
+            }
+        }
+    ]
+}
