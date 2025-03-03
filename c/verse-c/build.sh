@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# ./build.sh [debug, release]
+# ./build.sh [--debug, --release]
 
 help_and_exit () {
     if [ $# -lt 1 ]; then

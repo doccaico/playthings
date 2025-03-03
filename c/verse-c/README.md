@@ -9,9 +9,9 @@ Usage: verse-c [Chapter] [Page]
 
 #### Build Requirements
 - UCRT64([MSYS2](https://www.msys2.org/))
-- Lexbor
+- gcc and lexbor
 ```sh
-$ pacman -S mingw-w64-ucrt-x86_64-lexbor
+$ pacman -S mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-lexbor
 ```
 
 #### Build
