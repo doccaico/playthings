@@ -3,8 +3,8 @@ A program to read bible.
 
 #### Usage
 ```
-Usage: verse-c [Chapter] [Page]
-  Exsample: verse.exe GEN 1
+# Usage: verse-c [Chapter] [Page]
+#   Exsample: verse-c.exe GEN 1
 ```
 
 #### Build Requirements
@@ -21,4 +21,9 @@ $ ./build --debug
 
 # on Release mode
 $ ./build --release
+```
+
+#### Run
+```sh
+$ ./build/verse-c.exe GEN 1
 ```
