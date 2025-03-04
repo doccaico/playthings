@@ -4,7 +4,7 @@ A program to read bible.
 #### Usage
 ```
 # Usage: verse-c [Chapter] [Page]
-#   Exsample: verse-c.exe GEN 1
+#   Exsample: verse-c GEN 1
 ```
 
 #### Build Requirements
