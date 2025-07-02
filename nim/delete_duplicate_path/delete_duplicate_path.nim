@@ -1,9 +1,6 @@
 import std/[strutils, sets]
 import winim/lean
 
-# nimble install winim
-# nim -d:danger delete_duplicate_path.nim
-
 const MaxLength = 32767
 var
   name = "PATH"
