@@ -4,6 +4,8 @@ import "base:runtime"
 import "core:container/queue"
 import "core:testing"
 
+// $ odin test queue_plus.odin -file
+
 swap :: proc(q: ^$Q/queue.Queue($T), idx_a: int, idx_b: int, loc := #caller_location) {
 	runtime.bounds_check_error_loc(loc, idx_a, int(q.len))
 	runtime.bounds_check_error_loc(loc, idx_b, int(q.len))
