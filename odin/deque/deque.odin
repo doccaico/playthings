@@ -4,7 +4,8 @@ import "base:builtin"
 import "core:fmt"
 import "core:mem"
 import "core:testing"
-// minCapacity is the smallest capacity that deque may have. Must be power of 2
+
+// MIN_CAPACITY is the smallest capacity that deque may have. Must be power of 2
 // for bitwise modulus: x % n == x & (n - 1).
 MIN_CAPACITY :: 16
 
@@ -14,23 +15,23 @@ MIN_CAPACITY :: 16
 // For example, to create a Deque that contains strings do one of the
 // following:
 //
-//	var stringDeque deque.Deque[string]
-//	stringDeque := new(deque.Deque[string])
-//	stringDeque := &deque.Deque[string]{}
+//      d: Deque(string)
+//      d := new(Deque(string))
 //
 // To create a Deque that will never resize to have space for less than 64
 // items, specify a base capacity:
 //
-//	var d deque.Deque[int]
-//	d.SetBaseCap(64)
+//	d: Deque(int)
+//	set_base_cap(&d, 64)
 //
 // To ensure the Deque can store 1000 items without needing to resize while
 // items are added:
 //
-//	d.Grow(1000)
+//	grow(d, 1000)
 //
-// Any values supplied to SetBaseCap and Grow are rounded up to the nearest
+// Any values supplied to set_base_cap and grow are rounded up to the nearest
 // power of 2, since the Deque grows by powers of 2.
+
 Deque :: struct($T: typeid) {
 	buf:     []T,
 	head:    int,
@@ -459,6 +460,31 @@ test_cap :: proc(t: ^testing.T) {
 test_len :: proc(t: ^testing.T) {
 	d: Deque(int)
 	testing.expect(t, len(&d) == 0)
+}
+
+@(test)
+test_create :: proc(t: ^testing.T) {
+	{
+		d: Deque(int)
+		push_back(&d, 1)
+		push_back(&d, 2)
+		push_back(&d, 3)
+		testing.expect(t, at(&d, 0) == 1)
+		testing.expect(t, at(&d, 1) == 2)
+		testing.expect(t, at(&d, 2) == 3)
+		destroy(&d)
+	}
+	{
+		d := new(Deque(int))
+		push_back(d, 1)
+		push_back(d, 2)
+		push_back(d, 3)
+		testing.expect(t, at(d, 0) == 1)
+		testing.expect(t, at(d, 1) == 2)
+		testing.expect(t, at(d, 2) == 3)
+		destroy(d)
+		free(d)
+	}
 }
 
 @(test)
