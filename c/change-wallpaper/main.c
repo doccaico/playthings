@@ -8,7 +8,7 @@
 
 int wmain(int argc, wchar_t *argv[])
 {
-    setlocale( LC_ALL, "Japanese" );
+    setlocale(LC_ALL, "Japanese");
 
     if (argc != 2) {
         wprintf(L"Usage: %s.exe [FILEPATH]", argv[0]);
