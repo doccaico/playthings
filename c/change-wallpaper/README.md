@@ -2,9 +2,10 @@
 
 ## Build
 ```sh
-build.cmd --debug
-# or
-build.cmd --asan
-# or
-build.cmd --release
+# debug
+$ build # build debug
+# debug with asan
+$ build asan
+# release
+$ build release
 ```
