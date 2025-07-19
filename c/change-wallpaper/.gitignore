@@ -1,4 +1,1 @@
-*.exp
-*.pdb
-*.exe
-*.obj
+build/
