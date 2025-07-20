@@ -3,10 +3,11 @@
 # !*.*
 
 zig-out
-zig-cache
+.zig-cache
 a.out
 main
 target
 
 *.obj
 *.pdb
+*.exe
