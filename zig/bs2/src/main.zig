@@ -50,7 +50,7 @@ pub fn main() !void {
             }
         }
         _ = list.pop(); // remove '_'
-        const result = try fmt.bufPrint(&buf, "[Hex] {s}\n", .{list.items});
+        const result = try fmt.bufPrint(&buf, "[Bin] {s}\n", .{list.items});
         try stdout.print("{s}", .{result});
     }
     // Oct
@@ -67,7 +67,7 @@ pub fn main() !void {
             }
         }
         _ = list.pop(); // remove '_'
-        const result = try fmt.bufPrint(&buf, "[Hex] {s}\n", .{list.items});
+        const result = try fmt.bufPrint(&buf, "[Oct] {s}\n", .{list.items});
         try stdout.print("{s}", .{result});
     }
     // Hex
