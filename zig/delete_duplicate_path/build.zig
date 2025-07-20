@@ -11,7 +11,7 @@ pub fn build(b: *std.Build) void {
             .target = target,
             .optimize = optimize,
             .single_threaded = true,
-            .link_libc = true,
+            // .link_libc = true,
         }),
     });
 
