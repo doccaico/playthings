@@ -15,6 +15,10 @@ pub fn build(b: *std.Build) void {
         }),
     });
 
+    if (exe.root_module.optimize != .Debug) {
+        exe.root_module.strip = true;
+    }
+
     b.installArtifact(exe);
 
     const run_step = b.step("run", "Run the app");

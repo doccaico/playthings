@@ -2,7 +2,7 @@
     .name = .delete_duplicate_path,
     .version = "0.0.0",
     .fingerprint = 0xfaa52afde15cb151, // Changing this has security and trust implications.
-    .minimum_zig_version = "0.15.0-dev.1145+3ae0ba096",
+    .minimum_zig_version = "0.15.0-dev.1149+4e6a04929",
     .dependencies = .{
     },
     .paths = .{
@@ -11,3 +11,4 @@
         "src",
     },
 }
+
