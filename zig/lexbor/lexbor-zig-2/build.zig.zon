@@ -1,0 +1,16 @@
+.{
+    .name = .lexbor_zig_2,
+    .version = "0.0.0",
+    .fingerprint = 0x22c1f5bc8ef0f4fa,
+    .minimum_zig_version = "0.15.0-dev.1149+4e6a04929",
+    .dependencies = .{
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "lib",
+        // For example...
+        //"LICENSE",
+        //"README.md",
+    },
+}
