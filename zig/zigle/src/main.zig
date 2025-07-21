@@ -57,12 +57,21 @@ pub fn main() !void {
                 try command.append(val);
             }
 
+            for (command.items) |c| {
+                try stdout.print("{s} ", .{c});
+            }
+            try stdout.print("\n", .{});
+
+            // ビルドだけして実行はしない
+            // コンパイルエラーがあれば出力する
             const result = try process.Child.run(.{ .allocator = allocator, .argv = command.items });
-            const return_string = switch (result.term) {
-                .Exited => |code| if (code == 0) result.stdout else result.stderr,
-                else => result.stderr,
+            const success = switch (result.term) {
+                .Exited => |code| if (code == 0) true else false,
+                else => false,
             };
-            try stdout.print("{s}\n", .{return_string});
+            if (!success) {
+                try stderr.print("{s}", .{result.stderr});
+            }
 
             command.clearRetainingCapacity();
         }
