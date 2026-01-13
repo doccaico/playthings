@@ -1,4 +1,4 @@
-import std/[dom, random]
+import std / [dom, random]
 import ./canvas
 
 const
