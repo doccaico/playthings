@@ -2,10 +2,10 @@
 [DEMO](https://doccaico.github.io/playthings/nim/conway-js/)
 ### Version
 ```
-2021/03/03: nim 1.4.4
+2026/01/13: nim 2.2.6
 ```
 ### Build and Run
 ```
-$ nim js -d:release main.nim
+$ nim js -d:danger main.nim
 $ Your-Browser index.html
 ```
