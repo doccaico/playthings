@@ -30,6 +30,7 @@ else:
 # test
 echo dirPath
 echo commitMsg
+echo fmt"""git commit -m "{commitMsg}""""
 
 if dirPath != "":
   setCurrentDir dirpath
@@ -41,5 +42,5 @@ if ret == "":
   quit "There is no need to update.", 0
 
 discard execCmd("git add .")
-discard execCmd(fmt"""git commit -m {commitMsg}""")
+discard execCmd(fmt"""git commit -m "{commitMsg}"""")
 echo execCmdEx("git push").output
