@@ -27,6 +27,10 @@ else:
   dirPath = ""
   commitMsg = paramStr 1
 
+# test
+echo dirPath
+echo commitMsg
+
 if dirPath != "":
   setCurrentDir dirpath
 
