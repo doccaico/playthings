@@ -27,15 +27,9 @@ else:
   dirPath = ""
   commitMsg = paramStr 1
 
-# test
-echo dirPath
-echo commitMsg
-echo fmt"""git commit -m "{commitMsg}""""
-
 if dirPath != "":
   setCurrentDir dirpath
 
-# if execCmdEx("git diff --exit-code").exitCode == 0:
 var ret = execCmdEx("git status --porcelain").output
 ret.stripLineEnd()
 if ret == "":
