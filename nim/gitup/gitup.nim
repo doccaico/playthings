@@ -10,8 +10,8 @@ let exe = getAppFilename()
 let argc = paramCount()
 
 if argc == 0 or argc >= 3:
-  echo fmt"""Usage: {exe} DIR_PATH "Up"""", 1
-  echo fmt"""       {exe}          "Up"""", 1
+  echo fmt"""Usage: {exe} DIR_PATH "Up""""
+  echo fmt"""       {exe}          "Up""""
   quit 1
 
 if findExe(GIT) == "":
