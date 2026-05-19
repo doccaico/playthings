@@ -31,9 +31,9 @@ if dirPath != "":
   setCurrentDir dirpath
 
 # if execCmdEx("git diff --exit-code").exitCode == 0:
-var ret = execCmdEx("git status --porcelain")
-ret[0].stripLineEnd()
-if ret[0] == "":
+var ret = execCmdEx("git status --porcelain").output
+ret.stripLineEnd()
+if ret == "":
   quit "There is no need to update.", 0
 
 discard execCmd("git add .")
