@@ -1,4 +1,4 @@
-# 2026/05/19 (Nim Compiler Version 2.2.10)
+# 2026/05/21 (Nim Compiler Version 2.2.10)
 # nim c -d:release gitup.nim
 
 import std/[os, osproc, strutils, strformat]
@@ -20,7 +20,9 @@ if findExe(GIT) == "":
 var dirPath: string
 var commitMsg: string
 
-if dirExists(paramStr 1):
+if argc == 2:
+  if not dirExists(paramStr 1):
+    quit fmt"Does not exist: {paramStr 1}", 1
   dirPath = paramStr 1
   commitMsg = paramStr 2
 else:
