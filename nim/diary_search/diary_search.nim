@@ -21,4 +21,4 @@ if paramStr(1) == "-h" or paramStr(1) == "--help":
 
 let word = paramStr(1)
 
-discard execCmd(fmt"""cmd /c "rg --color always --heading --line-number --ignore-case --sort=path {word} {diary_directory} | less -R"""")
+discard execCmd(fmt"""cmd /c "rg --color always --heading --line-number --ignore-case --sort=path {word} {diary_directory} | less -R --silent"""")
