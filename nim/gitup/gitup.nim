@@ -1,5 +1,5 @@
-# 2026/05/21 (Nim Compiler Version 2.2.10)
-# nim c -d:release --threads:off gitup.nim
+# 2026/05/23 (Nim Compiler Version 2.2.10)
+# nim c -d:release --opt:size --threads:off gitup.nim
 
 import std/[os, osproc, strutils, strformat]
 
