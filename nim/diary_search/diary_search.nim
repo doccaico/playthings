@@ -1,5 +1,5 @@
 # 2026/05/23 (Nim Compiler Version 2.2.10)
-# nim c -d:release --opt:size --threads:off diary_search.nim
+# nim c -d:release --opt:size --threads:off --mm:arc --cc:vcc diary_search.nim
 
 import std/[osproc, parseopt, strformat]
 
