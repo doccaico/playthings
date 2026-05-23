@@ -1,10 +1,8 @@
 # 2026/05/23 (Nim Compiler Version 2.2.10)
 # nim c -d:release --opt:size --threads:off diary_search.nim
 
-import std/[osproc, parseopt, strformat]
+import std/[osproc, parseopt, strformat, files, paths]
 
-
-const diary_directory = """C:\Users\doccaico\Dropbox\diary"""
 
 proc writeHelp(code: int) =
   stdout.writeLine "Usage: diary_search.exe [OPTION] WORD"
@@ -14,11 +12,15 @@ proc writeHelp(code: int) =
   stdout.writeLine "    -h, --help           Display the help."
   quit code
 
+const
+  diary_directory = """C:\Users\doccaico\Dropbox\diary"""
+  output_file = """C:\Users\doccaico\Downloads\output.txt"""
 
-var word = ""
-
-# Options
-var color = "--color never"
+var
+  # Search word
+  word = ""
+  # Options
+  color = "--color never"
 
 for kind, key, val in getopt():
   case kind
@@ -33,4 +35,10 @@ for kind, key, val in getopt():
 if word == "":
   writeHelp(1)
 
-discard execCmd(fmt"""rg {color} --ignore-case --sort=path {word} {diary_directory}""")
+let output = execCmdEx(fmt"""rg {color} --heading --line-number --ignore-case --sort=path {word} {diary_directory}""").output
+
+writeFile(output_file, output)
+
+discard execCmd(fmt"""cmd /c "less {output_file}"""")
+
+removeFile(Path(output_file))
