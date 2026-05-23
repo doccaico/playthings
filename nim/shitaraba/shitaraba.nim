@@ -2,7 +2,7 @@
 # nimble install regex puppy
 # nim c -d:release --opt:size --threads:off --mm:arc --cc:vcc shitaraba.nim
 
-import std/[os, osproc, strformat, encodings, strutils, parseutils, unicode, syncio]
+import std/[os, osproc, strformat, encodings, strutils, parseutils, paths, unicode, syncio, files]
 import puppy, regex
 
 
@@ -65,3 +65,5 @@ if open(f, temp, fmWrite):
   close(f)
 
 discard execCmd(fmt"less {temp}")
+
+removeFile(Path(temp))

@@ -13,7 +13,7 @@ proc writeHelp(code: int) =
   quit code
 
 const
-  diary_directory = """C:\Users\doccaico\Dropbox\diary"""
+  diary_directory = r"C:\Users\doccaico\Dropbox\diary"
 
 var
   # Search word
@@ -35,6 +35,6 @@ if word == "":
   writeHelp(1)
 
 if color:
-  discard execCmd(fmt"""rg --heading --line-number --ignore-case --sort=path {word} {diary_directory}""")
+  discard execCmd(fmt"rg --heading --line-number --ignore-case --sort=path {word} {diary_directory}")
 else:
   discard execCmd(fmt"""cmd /c "rg --color never --heading --line-number --ignore-case --sort=path {word} {diary_directory} | less"""")
