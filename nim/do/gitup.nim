@@ -3,7 +3,8 @@ import std/[os, osproc, strutils, strformat]
 
 proc writeHelpAndExit(stdio: File, code: int) {.noreturn.} =
   stdio.writeLine "Usage:"
-  stdio.writeLine "    do.exe gitup \"Up\""
+  stdio.writeLine "    do.exe gitup DIR \"Up\""
+  stdio.writeLine "    do.exe gitup     \"Up\""
   quit code
 
 const GIT = "git"

@@ -19,4 +19,5 @@ proc main*(argc: int, argv: seq[string]) =
   discard execCmd(fmt"""cmd /c "rg --color always --heading --line-number --ignore-case --sort=path {word} {DIARY_DIR} | less -R --silent"""")
 
 when isMainModule:
+  import std/[os]
   main(paramCount(), commandLineParams())
