@@ -20,7 +20,7 @@ var
   # Search word
   word = ""
   # Options
-  color = "--color never"
+  color = false
 
 for kind, key, val in getopt():
   case kind
@@ -29,16 +29,16 @@ for kind, key, val in getopt():
   of cmdLongOption, cmdShortOption:
     case key
     of "help", "h": writeHelp(0)
-    of "color", "c": color = ""
+    of "color", "c": color = true
   of cmdEnd: assert(false) # cannot happen
 
 if word == "":
   writeHelp(1)
 
-if color == "":
-  discard execCmd(fmt"""rg {color} --heading --line-number --ignore-case --sort=path {word} {diary_directory}""")
+if color:
+  discard execCmd(fmt"""rg --heading --line-number --ignore-case --sort=path {word} {diary_directory}""")
 else:
-  let output = execCmdEx(fmt"""rg {color} --heading --line-number --ignore-case --sort=path {word} {diary_directory}""").output
+  let output = execCmdEx(fmt"""rg --color never --heading --line-number --ignore-case --sort=path {word} {diary_directory}""").output
   writeFile(output_file, output)
   discard execCmd(fmt"""cmd /c "less {output_file}"""")
   removeFile(Path(output_file))
