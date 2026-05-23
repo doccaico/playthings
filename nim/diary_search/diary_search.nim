@@ -35,10 +35,10 @@ for kind, key, val in getopt():
 if word == "":
   writeHelp(1)
 
-let output = execCmdEx(fmt"""rg {color} --heading --line-number --ignore-case --sort=path {word} {diary_directory}""").output
-
-writeFile(output_file, output)
-
-discard execCmd(fmt"""cmd /c "less {output_file}"""")
-
-removeFile(Path(output_file))
+if color == "":
+  discard execCmd(fmt"""rg {color} --heading --line-number --ignore-case --sort=path {word} {diary_directory}""")
+else:
+  let output = execCmdEx(fmt"""rg {color} --heading --line-number --ignore-case --sort=path {word} {diary_directory}""").output
+  writeFile(output_file, output)
+  discard execCmd(fmt"""cmd /c "less {output_file}"""")
+  removeFile(Path(output_file))
