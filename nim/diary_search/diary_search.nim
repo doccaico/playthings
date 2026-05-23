@@ -1,7 +1,7 @@
 # 2026/05/23 (Nim Compiler Version 2.2.10)
 # nim c -d:release --opt:size --threads:off diary_search.nim
 
-import std/[osproc, parseopt, strformat, files, paths]
+import std/[osproc, parseopt, strformat]
 
 
 proc writeHelp(code: int) =
@@ -14,7 +14,6 @@ proc writeHelp(code: int) =
 
 const
   diary_directory = """C:\Users\doccaico\Dropbox\diary"""
-  output_file = """C:\Users\doccaico\Downloads\output.txt"""
 
 var
   # Search word
@@ -38,7 +37,4 @@ if word == "":
 if color:
   discard execCmd(fmt"""rg --heading --line-number --ignore-case --sort=path {word} {diary_directory}""")
 else:
-  let output = execCmdEx(fmt"""rg --color never --heading --line-number --ignore-case --sort=path {word} {diary_directory}""").output
-  writeFile(output_file, output)
-  discard execCmd(fmt"""cmd /c "less {output_file}"""")
-  removeFile(Path(output_file))
+  discard execCmd(fmt"""cmd /c "rg --color never --heading --line-number --ignore-case --sort=path {word} {diary_directory} | less"""")
