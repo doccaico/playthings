@@ -9,9 +9,11 @@ import ./[diary_search, gitup, shitaraba]
 
 proc writeHelpAndExit(stdio: File, code: int) {.noreturn.} =
   stdio.writeLine "Usage:"
-  stdio.writeLine "    do.exe diary_search"
-  stdio.writeLine "    do.exe gitup"
-  stdio.writeLine "    do.exe shitaraba"
+  stdio.writeLine "    do.exe KIND"
+  stdio.writeLine "Kinds:"
+  stdio.writeLine "    diary_search    日記を検索"
+  stdio.writeLine "    gitup           GithubにPush"
+  stdio.writeLine "    shitaraba       Shitarabaを閲覧"
   quit code
 
 proc main(argc: int, argv: seq[string]) =
