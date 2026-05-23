@@ -1,40 +1,24 @@
-# 2026/05/23 (Nim Compiler Version 2.2.10)
+# 2026/05/24 (Nim Compiler Version 2.2.10)
 # nim c -d:release --opt:size --threads:off --mm:arc --cc:vcc diary_search.nim
 
-import std/[osproc, parseopt, strformat]
+import std/[os, osproc, strformat]
 
 
-proc writeHelp(code: int) =
-  stdout.writeLine "Usage: diary_search.exe [OPTION] WORD"
-  stdout.writeLine ""
-  stdout.writeLine "OPTION"
-  stdout.writeLine "    -c, --color          Print in color. (default: off)"
-  stdout.writeLine "    -h, --help           Display the help."
+proc writeHelpAndExit(stdio: File, code: int) =
+  stdio.writeLine "Usage: diary_search.exe WORD"
   quit code
 
 const
   diary_directory = r"C:\Users\doccaico\Dropbox\diary"
 
-var
-  # Search word
-  word = ""
-  # Options
-  color = false
+let argc = paramCount()
 
-for kind, key, val in getopt():
-  case kind
-  of cmdArgument:
-    word = key
-  of cmdLongOption, cmdShortOption:
-    case key
-    of "help", "h": writeHelp(0)
-    of "color", "c": color = true
-  of cmdEnd: assert(false) # cannot happen
+if argc == 0 or argc > 1:
+  writeHelpAndExit stderr, 1
 
-if word == "":
-  writeHelp(1)
+if paramStr(1) == "-h" or paramStr(1) == "--help":
+  writeHelpAndExit stdout, 0
 
-if color:
-  discard execCmd(fmt"rg --heading --line-number --ignore-case --sort=path {word} {diary_directory}")
-else:
-  discard execCmd(fmt"""cmd /c "rg --color never --heading --line-number --ignore-case --sort=path {word} {diary_directory} | less"""")
+let word = paramStr(1)
+
+discard execCmd(fmt"""cmd /c "rg --color always --heading --line-number --ignore-case --sort=path {word} {diary_directory} | less -R"""")

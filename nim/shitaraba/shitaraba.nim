@@ -1,4 +1,4 @@
-# l2026/05/23 (Nim Compiler Version 2.2.10)
+# l2026/05/24 (Nim Compiler Version 2.2.10)
 # nimble install regex puppy
 # nim c -d:release --opt:size --threads:off --mm:arc --cc:vcc shitaraba.nim
 
@@ -45,7 +45,7 @@ for m in findAll(contents, re2("<dt.+?<b>(\\w+?)</b>.+?：(.+?)</dt>.+?<dd>(.+?)
   # date
   date.add contents[m.group(1)].strip(leading = false)
   # post
-  var body = contents[m.group(2)].replace(" ", "").replace("\n", "").replace("<br>", "\n").replace("<br><br>", "\n").strip(leading=false)
+  var body = contents[m.group(2)].strip().replace("<br>          <br>", "").replace("<br>", "")
   post.add body.replace(re2("&#(\\d+?);"), convertEmoji)
 
 # -- DEBUG --
@@ -59,11 +59,14 @@ const temp = r"C:\Users\doccaico\Downloads\temp.txt"
 var f: File
 if open(f, temp, fmWrite):
   for i in 0..<name.len:
-    f.writeLine fmt"[{name[i]}]: {date[i]}"
+    # colors
+    # https://stackoverflow.com/questions/6297072/color-for-the-prompt-just-the-prompt-proper-in-cmd-exe-and-powershell
+    f.writeLine fmt("[36m{name[i]}[0m: [32m{date[i]}[0m")
     f.writeLine post[i]
     f.writeLine ""
   close(f)
 
-discard execCmd(fmt"less {temp}")
+
+discard execCmd(fmt"less -R --silent {temp}")
 
 removeFile(Path(temp))
