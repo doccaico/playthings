@@ -1,5 +1,7 @@
 import std/[os, osproc, strformat, strutils]
 
+import puppy
+
 
 proc writeHelpAndExit(stdio: File, code: int) {.noreturn.} =
   stdio.writeLine "Usage:"
@@ -13,26 +15,28 @@ proc main*(argc: int, argv: seq[string]) =
   if argv[0] == "-h" or argv[0] == "--help":
     writeHelpAndExit stdout, 0
 
-  const temp = r"C:\Users\doccaico\Downloads\temp.txt"
+  let url = fmt"""https://ja.wikipedia.org/w/api.php
+?format=json
+&action=query
+&list=random
+&rnnamespace=0
+&rnfilterredir=nonredirects
+&rnlimit={argv[0]}
+""".replace("\n", "")
 
-  let cmd = fmt"""cmd /c "curl -L -s https://ja.wikipedia.org/w/api.php --get
-    --data "format=json"
-    --data "action=query"
-    --data "list=random"
-    --data "rnnamespace=0"
-    --data "rnfilterredir=nonredirects"
-    --data "rnlimit={argv[0]}"
-    > {temp}"""".replace('\n', ' ')
+  let response = get(url)
 
-  discard execCmd(cmd)
+  let ids = execCmdEx(
+    fmt"""cmd /c "echo {response.body} | jq -r ".query.random[] | .id""""
+  ).output.strip().split('\n')
 
-  let ids = execCmdEx(fmt"""jq -r ".query.random[] | .id" {temp}""").output.strip().split('\n')
-  let titles = execCmdEx(fmt"""jq -r ".query.random[] | .title" {temp}""").output.strip().split('\n')
-
-  removeFile(temp)
+  let titles = execCmdEx(
+    fmt"""cmd /c "echo {response.body} | jq -r ".query.random[] | .title""""
+  ).output.strip().split('\n')
 
   doAssert(ids.len == titles.len)
 
+  const temp = r"C:\Users\doccaico\Downloads\temp.txt"
   var f: File
   if open(f, temp, fmWrite):
     for i in 0..<ids.len:

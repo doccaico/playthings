@@ -8,7 +8,7 @@ import ./[
   shitaraba,               # less
   delete_duplicate_path,
   verse,                   # less
-  wiki,                    # less, curl, jq
+  wiki,                    # less, jq
 ]
 
 const HELP_MSG = """
