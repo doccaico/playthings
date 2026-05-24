@@ -14,9 +14,9 @@ proc writeHelpAndExit(stdio: File, code: int) {.noreturn.} =
   stdio.writeLine "Usage:"
   stdio.writeLine "    do.exe KIND"
   stdio.writeLine "Kinds:"
-  stdio.writeLine "    diary_search                日記を検索"
-  stdio.writeLine "    gitup                       GithubにPush"
-  stdio.writeLine "    shitaraba                   Shitarabaを閲覧"
+  stdio.writeLine "    diary_search                日記を検索" # rg, less
+  stdio.writeLine "    gitup                       GithubにPush" # git
+  stdio.writeLine "    shitaraba                   Shitarabaを閲覧" # less
   stdio.writeLine "    delete_duplicate_path       環境変数PATHの重複を解消して表示"
   quit code
 

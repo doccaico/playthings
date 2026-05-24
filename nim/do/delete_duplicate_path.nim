@@ -1,5 +1,7 @@
 import std/[strutils, sets]
+
 import winim/lean
+
 
 const
   MAX_LENGTH = 32767
