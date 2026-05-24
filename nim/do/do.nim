@@ -2,7 +2,12 @@
 # nimble install regex puppy winim
 # nim c -d:release --opt:size --threads:off --mm:arc --cc:vcc do.nim
 
-import ./[diary_search, gitup, shitaraba, delete_duplicate_path]
+import ./[
+  diary_search,
+  gitup,
+  shitaraba,
+  delete_duplicate_path,
+]
 
 
 proc writeHelpAndExit(stdio: File, code: int) {.noreturn.} =
