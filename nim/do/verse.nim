@@ -4,7 +4,7 @@ import std/[os, osproc, strformat, strutils]
 import puppy, regex
 
 const VERSE_LIST = """
-    [36m- 旧約 (Old Testament) -[0m
+      [36m- 旧約 (Old Testament) -[0m
       創世記:GEN(1:50)
       出エジプト記:EXO(1:40)
       レビ記:LEV(1:27)
