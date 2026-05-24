@@ -1,4 +1,4 @@
-import std/[osproc, strformat, encodings, strutils, parseutils, paths, unicode, syncio, files]
+import std/[os, osproc, strformat, encodings, strutils, parseutils, unicode]
 
 import puppy, regex
 
@@ -61,8 +61,7 @@ proc main*(argc: int, argv: seq[string]) =
       f.writeLine ""
     close(f)
   discard execCmd(fmt"less -R --silent {temp}")
-  removeFile(Path(temp))
+  removeFile(temp)
 
 when isMainModule:
-  import std/[os]
   main(paramCount(), commandLineParams())

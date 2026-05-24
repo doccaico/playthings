@@ -24,16 +24,15 @@ proc main*(argc: int, argv: seq[string]) =
 
   doAssert(ids.len == titles.len)
 
-  const list = r"C:\Users\doccaico\Downloads\list.txt"
   var f: File
-  if open(f, list, fmWrite):
+  if open(f, temp, fmWrite):
     for i in 0..<ids.len:
       # colors
       # https://stackoverflow.com/questions/6297072/color-for-the-prompt-just-the-prompt-proper-in-cmd-exe-and-powershell
       f.writeLine fmt("[35m{i + 1}[0m:[36m{titles[i]}[0m: [32mhttps://ja.wikipedia.org/?curid={ids[i]}[0m")
     close(f)
-  discard execCmd(fmt"less -R --silent {list}")
-  removeFile(list)
+  discard execCmd(fmt"less -R --silent {temp}")
+  removeFile(temp)
 
 when isMainModule:
   main(paramCount(), commandLineParams())
