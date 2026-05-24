@@ -15,7 +15,16 @@ proc main*(argc: int, argv: seq[string]) =
 
   const temp = r"C:\Users\doccaico\Downloads\temp.txt"
 
-  discard execCmd(fmt"""cmd /c "curl -L -s https://ja.wikipedia.org/w/api.php --get --data "format=json" --data "action=query" --data "list=random" --data "rnnamespace=0" --data "rnfilterredir=nonredirects" --data "rnlimit={argv[0]}" > {temp}"""")
+  let cmd = fmt"""cmd /c "curl -L -s https://ja.wikipedia.org/w/api.php --get
+    --data "format=json"
+    --data "action=query"
+    --data "list=random"
+    --data "rnnamespace=0"
+    --data "rnfilterredir=nonredirects"
+    --data "rnlimit={argv[0]}"
+    > {temp}"""".replace('\n', ' ')
+
+  discard execCmd(cmd)
 
   let ids = execCmdEx(fmt"""jq -r ".query.random[] | .id" {temp}""").output.strip().split('\n')
   let titles = execCmdEx(fmt"""jq -r ".query.random[] | .title" {temp}""").output.strip().split('\n')
