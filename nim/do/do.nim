@@ -2,8 +2,6 @@
 # nimble install regex puppy winim
 # nim c -d:release --opt:size --threads:off --mm:arc --cc:vcc do.nim
 
-import std/[os]
-
 import ./[diary_search, gitup, shitaraba, delete_duplicate_path]
 
 
@@ -30,4 +28,5 @@ proc main(argc: int, argv: seq[string]) =
   else: writeHelpAndExit stderr, 1
 
 when isMainModule:
+  import std/[os]
   main(paramCount(), commandLineParams())
