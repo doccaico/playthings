@@ -1,25 +1,27 @@
 # 2026/05/24 (Nim Compiler Version 2.2.10)
-# nimble install regex puppy winim
+# nimble install regex puppy
 # nim c -d:release --opt:size --threads:off --mm:arc --cc:vcc do.nim
 
 import ./[
-  diary_search,
-  gitup,
-  shitaraba,
+  diary_search,            # less, rg
+  gitup,                   # git
+  shitaraba,               # less
   delete_duplicate_path,
-  verse,
+  verse,                   # less
 ]
 
+const HELP_MSG = """
+Usage:
+    do.exe KIND
+KIND:
+    diary_search                日記を検索
+    gitup                       GithubにPush
+    shitaraba                   Shitarabaを閲覧
+    delete_duplicate_path       環境変数PATHの重複を解消して表示
+    verse                       聖書(新共同訳)を表示"""
 
 proc writeHelpAndExit(stdio: File, code: int) {.noreturn.} =
-  stdio.writeLine "Usage:"
-  stdio.writeLine "    do.exe KIND"
-  stdio.writeLine "Kinds:"
-  stdio.writeLine "    diary_search                日記を検索" # rg, less
-  stdio.writeLine "    gitup                       GithubにPush" # git
-  stdio.writeLine "    shitaraba                   Shitarabaを閲覧" # less
-  stdio.writeLine "    delete_duplicate_path       環境変数PATHの重複を解消して表示"
-  stdio.writeLine "    verse                       聖書(新共同訳)を表示" # less
+  stdio.writeLine HELP_MSG
   quit code
 
 proc main(argc: int, argv: seq[string]) =
