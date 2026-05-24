@@ -7,6 +7,7 @@ import ./[
   gitup,
   shitaraba,
   delete_duplicate_path,
+  verse,
 ]
 
 
@@ -18,6 +19,7 @@ proc writeHelpAndExit(stdio: File, code: int) {.noreturn.} =
   stdio.writeLine "    gitup                       GithubにPush" # git
   stdio.writeLine "    shitaraba                   Shitarabaを閲覧" # less
   stdio.writeLine "    delete_duplicate_path       環境変数PATHの重複を解消して表示"
+  stdio.writeLine "    verse                       聖書(新共同訳)を表示" # less
   quit code
 
 proc main(argc: int, argv: seq[string]) =
@@ -30,6 +32,7 @@ proc main(argc: int, argv: seq[string]) =
   of "gitup": gitup.main(argc - 1, argv[1..^1])
   of "shitaraba": shitaraba.main(argc - 1, argv[1..^1])
   of "delete_duplicate_path": delete_duplicate_path.main()
+  of "verse": verse.main(argc - 1, argv[1..^1])
   else: writeHelpAndExit stderr, 1
 
 when isMainModule:
