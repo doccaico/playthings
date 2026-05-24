@@ -8,6 +8,7 @@ import ./[
   shitaraba,               # less
   delete_duplicate_path,
   verse,                   # less
+  wiki,                    # less, curl, jq
 ]
 
 const HELP_MSG = """
@@ -18,7 +19,8 @@ KIND:
     gitup                       GithubにPush
     shitaraba                   Shitarabaを閲覧
     delete_duplicate_path       環境変数PATHの重複を解消して表示
-    verse                       聖書(新共同訳)を表示"""
+    verse                       聖書(新共同訳)を表示
+    wiki                        ランダムWIKIのリストを表示"""
 
 proc writeHelpAndExit(stdio: File, code: int) {.noreturn.} =
   stdio.writeLine HELP_MSG
@@ -35,6 +37,7 @@ proc main(argc: int, argv: seq[string]) =
   of "shitaraba": shitaraba.main(argc - 1, argv[1..^1])
   of "delete_duplicate_path": delete_duplicate_path.main()
   of "verse": verse.main(argc - 1, argv[1..^1])
+  of "wiki": wiki.main(argc - 1, argv[1..^1])
   else: writeHelpAndExit stderr, 1
 
 when isMainModule:
