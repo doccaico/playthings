@@ -1,19 +1,19 @@
 import std/[os, osproc, strformat, strutils]
-
 import puppy
 
+import ./[utils]
 
-proc writeHelpAndExit(stdio: File, code: int) {.noreturn.} =
-  stdio.writeLine "Usage:"
-  stdio.writeLine "    do.exe wiki COUNT"
-  quit code
+
+const HELP_MSG = """
+Usage:
+    do.exe wiki COUNT"""
 
 proc main*(argc: int, argv: seq[string]) =
   if argc == 0 or argc > 1:
-    writeHelpAndExit stderr, 1
+    writeHelpAndExit stderr, HELP_MSG, 1
 
   if argv[0] == "-h" or argv[0] == "--help":
-    writeHelpAndExit stdout, 0
+    writeHelpAndExit stdout, HELP_MSG, 0
 
   let url = fmt"""https://ja.wikipedia.org/w/api.php
 ?format=json
@@ -36,16 +36,15 @@ proc main*(argc: int, argv: seq[string]) =
 
   doAssert(ids.len == titles.len)
 
-  const temp = r"C:\Users\doccaico\Downloads\temp.txt"
+  const TEMP = r"C:\Users\doccaico\Downloads\temp.txt"
   var f: File
-  if open(f, temp, fmWrite):
+  if open(f, TEMP, fmWrite):
     for i in 0..<ids.len:
-      # colors
-      # https://stackoverflow.com/questions/6297072/color-for-the-prompt-just-the-prompt-proper-in-cmd-exe-and-powershell
-      f.writeLine fmt("[35m{i + 1}[0m:[36m{titles[i]}[0m: [32mhttps://ja.wikipedia.org/?curid={ids[i]}[0m")
+      f.writeLine fmt"[35m{i + 1}[0m:[36m{titles[i]}[0m: [32mhttps://ja.wikipedia.org/?curid={ids[i]}[0m"
     close(f)
-  discard execCmd(fmt"less -R --silent {temp}")
-  removeFile(temp)
+  const LESS_OPT = "-R --silent"
+  discard execCmd(fmt"less {LESS_OPT} {TEMP}")
+  removeFile(TEMP)
 
 when isMainModule:
   main(paramCount(), commandLineParams())

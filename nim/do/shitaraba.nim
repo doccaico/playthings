@@ -1,12 +1,12 @@
 import std/[os, osproc, strformat, encodings, strutils, parseutils, unicode]
-
 import puppy, regex
 
+import ./[utils]
 
-proc writeHelpAndExit(stdio: File, code: int) {.noreturn.} =
-  stdio.writeLine "Usage:"
-  stdio.writeLine "    do.exe shitaraba [genre] [id] [number]"
-  quit code
+
+const HELP_MSG = """
+Usage:
+    do.exe shitaraba GENRE ID NUMBER"""
 
 proc convertEmoji(m: RegexMatch2, s: string): string =
   var res: int
@@ -15,14 +15,12 @@ proc convertEmoji(m: RegexMatch2, s: string): string =
 
 proc main*(argc: int, argv: seq[string]) =
   if argc == 0 or argc > 3:
-    writeHelpAndExit stderr, 1
+    writeHelpAndExit stderr, HELP_MSG, 1
 
   if argv[0] == "-h" or argv[0] == "--help":
-    writeHelpAndExit stdout, 0
+    writeHelpAndExit stdout, HELP_MSG, 0
 
-  let genre = argv[0]
-  let id = argv[1]
-  let number = argv[2]
+  let (genre, id ,number) = (argv[0], argv[1], argv[2])
 
   let response = get(
     fmt"https://jbbs.shitaraba.net/bbs/read.cgi/{genre}/{id}/{number}/l50",
@@ -43,25 +41,24 @@ proc main*(argc: int, argv: seq[string]) =
     var body = contents[m.group(2)].strip().replace("<br>          <br>", "").replace("<br>", "")
     post.add body.replace(re2("&#(\\d+?);"), convertEmoji)
 
-  # -- DEBUG --
+  # DEBUG
   # echo name
   # echo date
   # echo post
 
   doAssert(name.len == date.len and name.len == post.len)
 
-  const temp = r"C:\Users\doccaico\Downloads\temp.txt"
+  const TEMP = r"C:\Users\doccaico\Downloads\temp.txt"
+  const LESS_OPT = "-R --silent"
   var f: File
-  if open(f, temp, fmWrite):
+  if open(f, TEMP, fmWrite):
     for i in 0..<name.len:
-      # colors
-      # https://stackoverflow.com/questions/6297072/color-for-the-prompt-just-the-prompt-proper-in-cmd-exe-and-powershell
       f.writeLine fmt("[36m{name[i]}[0m: [32m{date[i]}[0m")
       f.writeLine post[i]
       f.writeLine ""
     close(f)
-  discard execCmd(fmt"less -R --silent {temp}")
-  removeFile(temp)
+  discard execCmd(fmt"less {LESS_OPT} {TEMP}")
+  removeFile(TEMP)
 
 when isMainModule:
   main(paramCount(), commandLineParams())

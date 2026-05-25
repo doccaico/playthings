@@ -1,23 +1,22 @@
-import std/[osproc, strformat]
+import std/[os, strformat]
+
+import ./[utils]
 
 
-proc writeHelpAndExit(stdio: File, code: int) {.noreturn.} =
-  stdio.writeLine "Usage:"
-  stdio.writeLine "    do.exe diary_search WORD"
-  quit code
-
-const DIARY_DIR = r"C:\Users\doccaico\Dropbox\diary"
+const HELP_MSG = """
+Usage:
+    do.exe diary_search WORD"""
 
 proc main*(argc: int, argv: seq[string]) =
   if argc == 0 or argc > 1:
-    writeHelpAndExit stderr, 1
+    writeHelpAndExit stderr, HELP_MSG, 1
   if argv[0] == "-h" or argv[0] == "--help":
-    writeHelpAndExit stdout, 0
+    writeHelpAndExit stdout, HELP_MSG, 0
 
-  let word = argv[0]
-
-  discard execCmd(fmt"""cmd /c "rg --color always --heading --line-number --ignore-case --sort=path {word} {DIARY_DIR} | less -R --silent"""")
+  const DIARY_DIR = r"C:\Users\doccaico\Dropbox\diary"
+  const RG_OPT = "--color always --heading --line-number --ignore-case --sort=path"
+  const LESS_OPT = "-R --silent"
+  discard execShellCmd(fmt"""rg {RG_OPT} {argv[0]} {DIARY_DIR} | less {LESS_OPT}""")
 
 when isMainModule:
-  import std/[os]
   main(paramCount(), commandLineParams())

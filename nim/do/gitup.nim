@@ -1,17 +1,18 @@
 import std/[os, osproc, strutils, strformat]
 
+import ./[utils]
 
-proc writeHelpAndExit(stdio: File, code: int) {.noreturn.} =
-  stdio.writeLine "Usage:"
-  stdio.writeLine "    do.exe gitup DIR \"Up\""
-  stdio.writeLine "    do.exe gitup     \"Up\""
-  quit code
+
+const HELP_MSG = """
+Usage:
+    do.exe gitup DIR "Up"
+    do.exe gitup     "Up""""
 
 proc main*(argc: int, argv: seq[string]) =
   if argc == 0 or argc > 2:
-    writeHelpAndExit stderr, 1
+    writeHelpAndExit stderr, HELP_MSG, 1
   if argv[0] == "-h" or argv[0] == "--help":
-    writeHelpAndExit stdout, 0
+    writeHelpAndExit stdout, HELP_MSG, 0
 
   var dirPath: string
   var commitMsg: string
@@ -35,7 +36,7 @@ proc main*(argc: int, argv: seq[string]) =
 
   discard execCmd("git add .")
   discard execCmd(fmt"""git commit -m "{commitMsg}"""")
-  echo execCmdEx("git push").output
+  stdout.writeLine execCmdEx("git push").output
 
 when isMainModule:
   main(paramCount(), commandLineParams())

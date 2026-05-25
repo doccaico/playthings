@@ -2,6 +2,8 @@
 # nimble install regex puppy
 # nim c -d:release --opt:size --threads:off --mm:arc --cc:vcc do.nim
 
+import ./[utils]
+
 import ./[
   diary_search,            # less, rg
   gitup,                   # git
@@ -10,6 +12,7 @@ import ./[
   verse,                   # less
   wiki,                    # less, jq
 ]
+
 
 const HELP_MSG = """
 Usage:
@@ -22,15 +25,11 @@ KIND:
     verse                       聖書(新共同訳)を表示
     wiki                        ランダムWIKIのリストを表示"""
 
-proc writeHelpAndExit(stdio: File, code: int) {.noreturn.} =
-  stdio.writeLine HELP_MSG
-  quit code
-
 proc main(argc: int, argv: seq[string]) =
   if argc == 0:
-    writeHelpAndExit stderr, 1
+    writeHelpAndExit stderr, HELP_MSG, 1
   if argv[0] == "-h" or argv[0] == "--help":
-    writeHelpAndExit stdout, 0
+    writeHelpAndExit stdout, HELP_MSG, 0
   case argv[0]
   of "diary_search": diary_search.main(argc - 1, argv[1..^1])
   of "gitup": gitup.main(argc - 1, argv[1..^1])
@@ -38,7 +37,7 @@ proc main(argc: int, argv: seq[string]) =
   of "delete_duplicate_path": delete_duplicate_path.main()
   of "verse": verse.main(argc - 1, argv[1..^1])
   of "wiki": wiki.main(argc - 1, argv[1..^1])
-  else: writeHelpAndExit stderr, 1
+  else: writeHelpAndExit stderr, HELP_MSG, 1
 
 when isMainModule:
   import std/[os]

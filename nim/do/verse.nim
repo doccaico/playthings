@@ -1,9 +1,13 @@
-
 import std/[os, osproc, strformat, strutils]
-
 import puppy, regex
 
-const VERSE_LIST = """
+import ./[utils]
+
+
+const HELP_MSG = """
+Usage:
+    do.exe verse 書物 章
+
       [36m- 旧約 (Old Testament) -[0m
       創世記:GEN(1:50)
       出エジプト記:EXO(1:40)
@@ -88,24 +92,12 @@ const VERSE_LIST = """
       ユダの手紙:JUD(1)
       ヨハネの黙示録:REV(1:22)"""
 
-proc writeHelpAndExit(stdio: File, code: int) {.noreturn.} =
-  const temp = r"C:\Users\doccaico\Downloads\temp.txt"
-  var f: File
-  if open(f, temp, fmWrite):
-    f.writeLine "Usage:"
-    f.writeLine "    do.exe verse 書物 章"
-    f.writeLine VERSE_LIST
-    close(f)
-  discard execCmd(fmt"less -R --silent -i {temp}")
-  removeFile(temp)
-  quit code
-
 proc main*(argc: int, argv: seq[string]) =
   if argc == 0 or argc > 2:
-    writeHelpAndExit stderr, 1
+    viewHelpAndExit stderr, HELP_MSG, 1
 
   if argv[0] == "-h" or argv[0] == "--help":
-    writeHelpAndExit stdout, 0
+    viewHelpAndExit stdout, HELP_MSG, 0
 
   let response = get(fmt"https://www.bible.com/ja/bible/1819/{argv[0]}.{argv[1]}/")
 
@@ -115,17 +107,16 @@ proc main*(argc: int, argv: seq[string]) =
     if sentence.len != 0:
       sentences.add sentence
 
-  const temp = r"C:\Users\doccaico\Downloads\temp.txt"
+  const TEMP = r"C:\Users\doccaico\Downloads\temp.txt"
   var f: File
-  if open(f, temp, fmWrite):
-    # colors
-    # https://stackoverflow.com/questions/6297072/color-for-the-prompt-just-the-prompt-proper-in-cmd-exe-and-powershell
+  if open(f, TEMP, fmWrite):
     f.writeLine fmt("[36m{argv[0]}[0m[[32m{argv[1]}[0m]")
     for s in sentences:
       f.writeLine s
     close(f)
-  discard execCmd(fmt"less -R --silent {temp}")
-  removeFile(temp)
+  const LESS_OPT = "-R --silent"
+  discard execCmd(fmt"less {LESS_OPT} {TEMP}")
+  removeFile(TEMP)
 
 when isMainModule:
   main(paramCount(), commandLineParams())
