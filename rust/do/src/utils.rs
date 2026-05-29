@@ -1,4 +1,6 @@
 use std::io::Write;
+use std::path::PathBuf;
+use std::fs;
 use std::process::{Command, ExitCode, Stdio};
 
 pub fn view_help_msg(msg: &str) -> ExitCode {
@@ -27,6 +29,24 @@ pub fn view_help_msg(msg: &str) -> ExitCode {
         _ => {
             eprintln!("less exited with an error");
             ExitCode::FAILURE
+        }
+    }
+}
+
+// スコープを抜ける時に自動でディレクトリを削除する構造体 (deferの代わり)
+pub struct CleanupDir {
+    pub path: PathBuf,
+    pub active: bool, // 最後にrenameで移動した場合は削除をスキップするためのフラグ
+}
+
+impl Drop for CleanupDir {
+    fn drop(&mut self) {
+        if self.active && self.path.exists() {
+            if fs::remove_dir_all(&self.path).is_err() {
+                println!(r#"failed to cleaned up: "{}""#, self.path.display());
+            } else {
+                println!(r#"Automatically cleaned up: "{}""#, self.path.display());
+            }
         }
     }
 }

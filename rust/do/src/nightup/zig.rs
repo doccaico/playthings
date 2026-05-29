@@ -3,6 +3,8 @@ use std::fs;
 use std::path::Path;
 use std::process::{Command, ExitCode};
 
+use crate::utils;
+
 pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
     // index.jsonを取得する
     let output = match Command::new("curl")
@@ -65,6 +67,12 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
         return ExitCode::FAILURE;
     }
     println!(r#"Created: "{}""#, work_dir_path.display());
+
+    // これ以降、どこで `return` しても `work_dir_path` は自動削除される
+    let mut cleanup = utils::CleanupDir {
+        path: work_dir_path.clone(),
+        active: true,
+    };
 
     let local_zip = "zig-master-latest.zip";
 
@@ -136,6 +144,9 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
         eprintln!("failed to move extracted directory to dist: {}", e);
         return ExitCode::FAILURE;
     }
+
+    cleanup.active = false; // 移動に成功したため、Drop時の削除を免除する
+
     println!(
         r#"Moved: "{}" to "{}""#,
         work_dir_path.display(),
