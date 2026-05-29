@@ -36,7 +36,7 @@ pub fn run(args: &[String]) -> ExitCode {
     {
         Ok(out) => out,
         Err(_) => {
-            eprintln!("'git' command not found");
+            eprintln!("failed to 'git' command");
             return ExitCode::FAILURE;
         }
     };
@@ -58,7 +58,7 @@ pub fn run(args: &[String]) -> ExitCode {
     {
         Ok(status) => status,
         Err(_) => {
-            eprintln!("failed to 'start explorer .'");
+            eprintln!("failed to 'git' command");
             return ExitCode::FAILURE;
         }
     };
@@ -75,7 +75,7 @@ pub fn run(args: &[String]) -> ExitCode {
     {
         Ok(status) => status,
         Err(_) => {
-            eprintln!("failed to execute 'git commit'");
+            eprintln!("failed to 'git' command");
             return ExitCode::FAILURE;
         }
     };
@@ -92,7 +92,7 @@ pub fn run(args: &[String]) -> ExitCode {
     {
         Ok(status) => status,
         Err(_) => {
-            eprintln!("failed to execute 'git push'");
+            eprintln!("failed to 'git' command");
             return ExitCode::FAILURE;
         }
     };
