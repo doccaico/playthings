@@ -1,4 +1,5 @@
-use std::process::{Command, ExitCode};
+use std::io::Write;
+use std::process::{Command, ExitCode, Stdio};
 
 const HELP_MSG: &str = "
 Usage:
@@ -9,24 +10,70 @@ pub fn run(args: &[String]) -> ExitCode {
         println!("{}", HELP_MSG);
         return ExitCode::SUCCESS;
     }
-    if args[2] != 2 {
+    if args.len() != 2 {
         eprintln!("{}", HELP_MSG);
         return ExitCode::FAILURE;
     }
 
-    const DIARY_DIR: &str = r"C:\Users\doccaico\Dropbox\diary";
-    const RG_OPT: &str = "--color always --heading --line-number --ignore-case --sort=path";
-    const LESS_OPT: &str = "-R --silent";
+    let diary_dir = match std::env::var("DIARY_DIR") {
+        Ok(dir) => dir,
+        Err(_) => {
+            eprintln!("not found 'DIARY_DIR' in env variable");
+            return ExitCode::FAILURE;
+        }
+    };
 
-    let keyword = &args[1];
-
-    Command::new("cmd")
+    let output = match Command::new("rg")
         .args([
-            "/C",
-            &format!("rg {RG_OPT} {keyword} {DIARY_DIR} | less {LESS_OPT}"),
+            "--color",
+            "always",
+            "--heading",
+            "--line-number",
+            "--ignore-case",
+            "--sort=path",
+            &args[1],
+            &diary_dir,
         ])
-        .status()
-        .expect("failed to 'rg and less' process");
+        .output()
+    {
+        Ok(out) => out,
+        Err(_) => {
+            eprintln!("'rg' is not in PATH");
+            return ExitCode::FAILURE;
+        }
+    };
 
-    ExitCode::SUCCESS
+    if output.stdout.is_empty() {
+        println!("No matches found for '{}'.", &args[1]);
+        return ExitCode::SUCCESS;
+    }
+
+    let mut child = match Command::new("less")
+        .args(["-R", "--silent"])
+        .stdin(Stdio::piped())
+        .stdout(Stdio::inherit())
+        .stderr(Stdio::inherit())
+        .spawn()
+    {
+        Ok(c) => c,
+        Err(_) => {
+            eprintln!("failed to spawn 'less'");
+            return ExitCode::FAILURE;
+        }
+    };
+
+    if let Some(mut stdin) = child.stdin.take() {
+        if let Err(_) = stdin.write_all(&output.stdout) {
+            eprintln!("failed to write to less stdin");
+            return ExitCode::FAILURE;
+        }
+    }
+
+    match child.wait() {
+        Ok(status) if status.success() => ExitCode::SUCCESS,
+        _ => {
+            eprintln!("less exited with an error");
+            ExitCode::FAILURE
+        }
+    }
 }
