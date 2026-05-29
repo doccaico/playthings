@@ -50,24 +50,29 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
     }
     println!("Download URL: {}", download_url);
 
-    // URLからファイル名を抽出する (例: zig-windows-x86_64-0.14.0.zip)
-    let file_name = match download_url.split('/').last() {
-        Some(name) => name,
-        None => {
-            eprintln!("failed to parse filename from URL");
+    let work_dir_name = "zig-master-upgrade-working";
+    let work_dir_path = Path::new(download_dir).join(work_dir_name);
+
+    if work_dir_path.exists() {
+        if let Err(e) = fs::remove_dir_all(&work_dir_path) {
+            eprintln!("failed to remove {}: {}", work_dir_path.display(), e);
             return ExitCode::FAILURE;
         }
-    };
+        println!(r#"Removed: "{}""#, work_dir_path.display());
+    }
 
-    // 解凍後のディレクトリ名（.zip を除いた名前、後で移動処理に使うため残しておくと便利）
-    let dir_name = file_name.strip_suffix(".zip").unwrap_or(file_name);
+    if let Err(e) = fs::create_dir_all(&work_dir_path) {
+        eprintln!("failed to create {}: {}", work_dir_path.display(), e);
+        return ExitCode::FAILURE;
+    }
+    println!(r#"Created: "{}""#, work_dir_path.display());
 
-    // ZIPをダウンロードする
-    // ZIPを確実に指定ディレクトリへダウンロードする
-    // -O ではなく -o <ファイル名> を使うことでWindowsでも確実に保存される
+    let local_zip = "zig-master-latest.zip";
+
+    // ワークスペース内にダウンロードする
     let output = match Command::new("curl")
-        .current_dir(download_dir)
-        .args(["-fsSL", "-A", "Mozilla/5.0", &download_url, "-o", file_name])
+        .current_dir(&work_dir_path)
+        .args(["-fsSL", "-A", "Mozilla/5.0", &download_url, "-o", local_zip])
         .output()
     {
         Ok(out) => out,
@@ -82,12 +87,12 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
         return ExitCode::FAILURE;
     }
 
-    println!("Download (ZIP) is done: {}", file_name);
+    println!("Download (ZIP) is done: {}", local_zip);
 
     // 解凍する
     let output = match Command::new("tar")
-        .current_dir(download_dir)
-        .args(["-xf", file_name])
+        .current_dir(&work_dir_path)
+        .args(["-xf", local_zip, "--strip-components=1"])
         .output()
     {
         Ok(out) => out,
@@ -104,8 +109,17 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
 
     println!("Extraction is done");
 
+    // 後始末：展開が終わったのでZIPファイルを削除
+    let zip_path = work_dir_path.join(local_zip);
+    if zip_path.exists() {
+        if let Err(e) = fs::remove_file(&zip_path) {
+            eprintln!("failed to remove {}: {}", zip_path.display(), e);
+            return ExitCode::FAILURE;
+        }
+        println!(r#"Removed: "{}""#, zip_path.display());
+    }
+
     //  配置（アップデートの適用）
-    let extracted_path = Path::new(download_dir).join(dir_name);
     let target_path = Path::new(dist_dir);
 
     // 既存の古いインストールディレクトリがあれば削除
@@ -117,24 +131,17 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
         println!(r#"Removed: "{}""#, target_path.display());
     }
 
-    // 解凍したフォルダを本来の配置先に移動（リネーム）
-    if let Err(e) = fs::rename(&extracted_path, &target_path) {
+    // 中身がファイル群だけになったワークスペースそのものを
+    // そのまま dist_dir のパスへ移動リネームする
+    if let Err(e) = fs::rename(&work_dir_path, &target_path) {
         eprintln!("failed to move extracted directory to dist: {}", e);
         return ExitCode::FAILURE;
     }
     println!(
         r#"Moved: "{}" to "{}""#,
-        extracted_path.display(),
+        work_dir_path.display(),
         target_path.display()
     );
-
-    // 後始末: ダウンロードしたZIPファイルを削除
-    let zip_path = Path::new(download_dir).join(file_name);
-    if let Err(e) = fs::remove_file(&zip_path) {
-        eprintln!("failed to remove ZIP: {}", e);
-        return ExitCode::FAILURE;
-    }
-    println!(r#"Removed: "{}""#, zip_path.display());
 
     println!(r#"Updated: "{}""#, dist_dir);
 
