@@ -10,13 +10,7 @@ pub fn run() -> ExitCode {
         }
     };
 
-    let mut result = String::new();
-    for path in paths.split(';') {
-        if "" != path {
-            result.push_str(path);
-        }
-    }
-
+    let result: String = paths.split(';').filter(|p| !p.is_empty()).collect();
     print!("{}", result);
 
     ExitCode::SUCCESS
