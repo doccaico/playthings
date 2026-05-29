@@ -6,7 +6,6 @@ use std::process::{Command, ExitCode};
 use crate::utils;
 
 pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
-    // index.jsonを取得する
     let output = match Command::new("curl")
         .args(["-sSL", "-A", "Mozilla/5.0", "https://go.dev/dl/?mode=json"])
         .output()

@@ -51,33 +51,51 @@ pub fn run(args: &[String]) -> ExitCode {
         return ExitCode::SUCCESS;
     }
 
-    let add_status = Command::new("git")
+    let add_status = match Command::new("git")
         .current_dir(dir_path)
         .args(["add", "."])
         .status()
-        .unwrap();
+    {
+        Ok(status) => status,
+        Err(_) => {
+            eprintln!("failed to 'start explorer .'");
+            return ExitCode::FAILURE;
+        }
+    };
 
     if !add_status.success() {
         println!("failed to execute 'git add'");
         return ExitCode::FAILURE;
     }
 
-    let commit_status = Command::new("git")
+    let commit_status = match Command::new("git")
         .current_dir(dir_path)
         .args(["commit", "-m", commig_msg])
         .status()
-        .expect("failed to execute 'git commit'");
+    {
+        Ok(status) => status,
+        Err(_) => {
+            eprintln!("failed to execute 'git commit'");
+            return ExitCode::FAILURE;
+        }
+    };
 
     if !commit_status.success() {
         println!("'git commit' failed");
         return ExitCode::FAILURE;
     }
 
-    let push_status = Command::new("git")
+    let push_status = match Command::new("git")
         .current_dir(dir_path)
         .arg("push")
         .status()
-        .expect("failed to execute 'git push'");
+    {
+        Ok(status) => status,
+        Err(_) => {
+            eprintln!("failed to execute 'git push'");
+            return ExitCode::FAILURE;
+        }
+    };
 
     if push_status.success() {
         ExitCode::SUCCESS

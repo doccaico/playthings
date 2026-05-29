@@ -6,7 +6,6 @@ use std::process::{Command, ExitCode};
 use crate::utils;
 
 pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
-    // index.jsonを取得する
     let output = match Command::new("curl")
         .args([
             "-sSL",
@@ -40,9 +39,10 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
     // 抽出できた URL を格納する変数
     let mut download_url = String::new();
 
-    if let Some(caps) = re_url.captures(&contents) 
-        && let Some(mat) = caps.get(1) {
-            download_url = mat.as_str().to_string();
+    if let Some(caps) = re_url.captures(&contents)
+        && let Some(mat) = caps.get(1)
+    {
+        download_url = mat.as_str().to_string();
     }
 
     if download_url.is_empty() {

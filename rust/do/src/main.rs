@@ -11,7 +11,7 @@ mod verse;
 mod wiki;
 
 #[path = "nightup/nightup.rs"]
-mod nightup; // curl, 7za
+mod nightup;
 
 const HELP_MSG: &str = "
 Usage:

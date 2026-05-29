@@ -5,6 +5,7 @@ use std::process::ExitCode;
 mod go;
 mod odin;
 mod v;
+mod vim;
 mod zig;
 
 const HELP_MSG: &str = "
@@ -93,6 +94,7 @@ pub fn run(args: &[String]) -> ExitCode {
             };
             go::run(dist_dir, &download_dir)
         }
+        "vim" => vim::run("", &download_dir),
         _ => {
             eprintln!("nightup: unknown command '{}'\n{}", args[0], HELP_MSG);
             ExitCode::FAILURE

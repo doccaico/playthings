@@ -64,9 +64,10 @@ pub fn run(args: &[String]) -> ExitCode {
     };
 
     if let Some(mut stdin) = child.stdin.take()
-        && stdin.write_all(&output.stdout).is_err() {
-            eprintln!("failed to write to less stdin");
-            return ExitCode::FAILURE;
+        && stdin.write_all(&output.stdout).is_err()
+    {
+        eprintln!("failed to write to less stdin");
+        return ExitCode::FAILURE;
     }
 
     match child.wait() {
