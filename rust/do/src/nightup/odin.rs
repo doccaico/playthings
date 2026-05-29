@@ -70,6 +70,7 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
         eprintln!("failed to create {}: {}", work_dir_path.display(), e);
         return ExitCode::FAILURE;
     }
+    println!(r#"Created: "{}""#, work_dir_path.display());
 
     let local_zip = "odin-nightly-latest.zip";
 
