@@ -4,6 +4,7 @@ use std::process::ExitCode;
 mod delete_duplicate_path;
 mod diary_search;
 mod gitup;
+mod shitaraba;
 
 const HELP_MSG: &str = "
 Usage:
@@ -32,6 +33,7 @@ fn main() -> ExitCode {
         "diary_search" => diary_search::run(&args[1..]),
         "gitup" => gitup::run(&args[1..]),
         "delete_duplicate_path" => delete_duplicate_path::run(),
+        "shitaraba" => shitaraba::run(&args[1..]),
         _ => ExitCode::FAILURE,
     }
 }
