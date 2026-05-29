@@ -44,8 +44,10 @@ pub fn run(args: &[String]) -> ExitCode {
     };
 
     let re = Regex::new(r"<dt(?ms)\b.+?<b>(\w+?)</b>.+?：(.+?)</dt>.+?<dd>(.+?)</dd>")
-        .expect("failed to compile shitaraba.main regex");
-    let re_emoji = Regex::new(r"&#(\d+?);").expect("failed to compile shitaraba.emoji regex");
+        .expect("failed to compile shitaraba.run.re (regex)");
+    let re_emoji =
+        Regex::new(r"&#(\d+?);").expect("failed to compile shitaraba.run.re_emoji (regex)");
+    let re_tag = Regex::new(r#"<[^>]*?>"#).expect("failed to compile shitaraba.run.re_tag (regex)");
 
     let contents = match String::from_utf8(output.stdout) {
         Ok(contens) => contens,
@@ -56,38 +58,33 @@ pub fn run(args: &[String]) -> ExitCode {
     };
 
     let mut datum = vec![];
-    for (_, [name, date, post]) in re.captures_iter(&contents).map(|c| c.extract()) {
-        let date = date.trim_ascii_end();
+    for caps in re.captures_iter(&contents) {
+        let name = caps.get(1).map_or("", |m| m.as_str());
+        let date = caps.get(2).map_or("", |m| m.as_str());
+        let post = caps.get(3).map_or("", |m| m.as_str());
+
+        let name = re_tag.replace_all(name, "").trim().to_string();
+        let date = date.trim_ascii_end().to_string();
         let post = post
             .trim_ascii()
-            .replace("<br>          <br>", "")
-            .replace("<br>", "");
-
-        let mut error_msg = None;
-        let post = re_emoji.replace_all(&post, |caps: &regex::Captures| {
-            if error_msg.is_some() {
-                return "".to_string();
-            }
-            match convert_cp(&caps[1]) {
+            .replace("<br>          <br>", "\n")
+            .replace("<br>", "\n");
+        let post = re_tag.replace_all(&post, "");
+        let final_post = re_emoji
+            .replace_all(&post, |caps: &regex::Captures| match convert_cp(&caps[1]) {
                 Ok(emoji) => emoji,
-                Err(e) => {
-                    error_msg = Some(e);
-                    "".to_string()
-                }
-            }
-        });
+                Err(_) => caps[0].to_string(),
+            })
+            .into_owned();
 
-        if let Some(e) = error_msg {
-            eprintln!("{}", e);
-            return ExitCode::FAILURE;
-        }
-
-        datum.push((name, date, post.into_owned()));
+        datum.push((name, date, final_post));
     }
 
     let mut child = match Command::new("less")
         .args(["-R", "--silent"])
         .stdin(Stdio::piped())
+        .stdout(Stdio::inherit())
+        .stderr(Stdio::inherit())
         .spawn()
     {
         Ok(c) => c,
@@ -99,7 +96,7 @@ pub fn run(args: &[String]) -> ExitCode {
 
     if let Some(mut stdin) = child.stdin.take() {
         for (name, date, post) in datum {
-            if let Err(_) = writeln!(
+            if let Err(_) = write!(
                 stdin,
                 "\x1b[36m{name}\x1b[0m: \x1b[32m{date}\x1b[0m\n{post}"
             ) {

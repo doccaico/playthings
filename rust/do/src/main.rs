@@ -2,19 +2,19 @@ use std::env;
 use std::process::ExitCode;
 
 mod utils;
-// use crate::utils;
 
 mod delete_duplicate_path;
-mod diary_search;
-mod gitup;
-mod shitaraba;
-mod verse;
+mod diary_search; // less, rg
+mod gitup; // git
+mod shitaraba; // busybox64u, curl, less
+mod verse; // less, curl
+mod wiki; // less, curl
 
 const HELP_MSG: &str = "
 Usage:
     do.exe KIND
 KIND:
-    diary_search                日記を検索
+    diary_search                環境変数(DIARY_DIR)にある日記を検索
     gitup                       GithubにPush
     shitaraba                   Shitarabaを閲覧
     delete_duplicate_path       環境変数PATHの重複を解消して表示
@@ -39,6 +39,7 @@ fn main() -> ExitCode {
         "delete_duplicate_path" => delete_duplicate_path::run(),
         "shitaraba" => shitaraba::run(&args[2..]),
         "verse" => verse::run(&args[2..]),
+        "wiki" => wiki::run(&args[2..]),
         _ => {
             eprintln!("unknown command '{}'\n{}", args[1], HELP_MSG);
             ExitCode::FAILURE

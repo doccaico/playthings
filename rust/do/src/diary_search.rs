@@ -3,7 +3,8 @@ use std::process::{Command, ExitCode, Stdio};
 
 const HELP_MSG: &str = "
 Usage:
-    do.exe diary_search WORD";
+    do.exe diary_search WORD
+    環境変数(DIARY_DIR)に日記が入っているディレクトリを設定すること";
 
 pub fn run(args: &[String]) -> ExitCode {
     if args.len() == 1 && (args[0] == "-h" || args[0] == "--help") {
