@@ -21,32 +21,21 @@ pub fn run(args: &[String]) -> ExitCode {
         return ExitCode::FAILURE;
     }
 
-    let base_home = match env::home_dir() {
-        Some(path) => path,
-        None => {
-            eprintln!("impossible to get your home dir");
-            return ExitCode::FAILURE;
-        }
-    };
-
-    let mut download_path = base_home.clone();
-    download_path.push("Downloads");
-    let download_dir = match download_path.into_os_string().into_string() {
-        Ok(s) => s,
-        Err(_) => {
-            eprintln!("download path is not valid UTF-8");
-            return ExitCode::FAILURE;
-        }
-    };
-
-    let mut ini_path = base_home;
-    ini_path.push(".nightup");
-
-    let conf = match Ini::load_from_file_noescape(&ini_path) {
-        Ok(ini) => ini,
-        Err(_) => {
-            eprintln!("failed to open: {}", ini_path.display());
-            return ExitCode::FAILURE;
+    let conf = {
+        let mut home_dir = match env::home_dir() {
+            Some(path) => path,
+            None => {
+                eprintln!("Impossible to get your home dir!");
+                return ExitCode::FAILURE;
+            }
+        };
+        home_dir.push(".nightup");
+        match Ini::load_from_file_noescape(&home_dir) {
+            Ok(ini) => ini,
+            Err(_) => {
+                eprintln!("failed to open: {}", home_dir.display());
+                return ExitCode::FAILURE;
+            }
         }
     };
 
@@ -57,6 +46,8 @@ pub fn run(args: &[String]) -> ExitCode {
             return ExitCode::FAILURE;
         }
     };
+
+    let download_dir = env::var("TEMP").unwrap_or_else(|_| ".".to_string());
 
     match args[0].as_str() {
         "zig" => {
