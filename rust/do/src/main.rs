@@ -10,17 +10,8 @@ mod shitaraba; // busybox64u, curl, less
 mod verse; // less, curl
 mod wiki; // less, curl
 
-// #[path = "nightup.rs"]
 #[path = "nightup/nightup.rs"]
-mod nightup;
-
-// {
-//     pub mod nightup;
-//     // pub mod zig;
-// }
-
-// use crate::nightup::nightup;
-// mod nightup;
+mod nightup; // curl, 7za
 
 const HELP_MSG: &str = "
 Usage:
@@ -53,9 +44,6 @@ fn main() -> ExitCode {
         "shitaraba" => shitaraba::run(&args[2..]),
         "verse" => verse::run(&args[2..]),
         "wiki" => wiki::run(&args[2..]),
-        // "nightup" => nightup::zig::run(&args[2..]),
-        // "nightup" => nightup::run(&args[2..]),
-        // "nightup" => nightup::nightup::run(&args[2..]),
         "nightup" => nightup::run(&args[2..]),
         _ => {
             eprintln!("unknown command '{}'\n{}", args[1], HELP_MSG);

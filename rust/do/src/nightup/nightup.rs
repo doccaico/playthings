@@ -2,7 +2,7 @@ use ini::Ini;
 use std::env;
 use std::process::ExitCode;
 
-mod zig;
+mod zig; // curl, 7za
 
 const HELP_MSG: &str = "
 Usage:
