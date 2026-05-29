@@ -114,8 +114,8 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
             eprintln!("failed to remove old dist directory: {}", e);
             return ExitCode::FAILURE;
         }
+        println!(r#"Removed: "{}""#, target_path.display());
     }
-    println!(r#"Removed: "{}""#, target_path.display());
 
     // 解凍したフォルダを本来の配置先に移動（リネーム）
     if let Err(e) = fs::rename(&extracted_path, &target_path) {

@@ -2,7 +2,8 @@ use ini::Ini;
 use std::env;
 use std::process::ExitCode;
 
-mod zig; // curl, 7za
+mod odin;
+mod zig; // curl, 7za // curl, 7za
 
 const HELP_MSG: &str = "
 Usage:
@@ -59,6 +60,16 @@ pub fn run(args: &[String]) -> ExitCode {
                 }
             };
             zig::run(dist_dir, &download_dir)
+        }
+        "odin" => {
+            let dist_dir = match section.get("odin") {
+                Some(path) => path,
+                None => {
+                    eprintln!(r#"nightup ini: not found path: "odin""#);
+                    return ExitCode::FAILURE;
+                }
+            };
+            odin::run(dist_dir, &download_dir)
         }
         _ => {
             eprintln!("nightup: unknown command '{}'\n{}", args[0], HELP_MSG);
