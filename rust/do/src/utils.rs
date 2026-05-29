@@ -16,11 +16,10 @@ pub fn view_help_msg(msg: &str) -> ExitCode {
         }
     };
 
-    if let Some(mut stdin) = child.stdin.take() {
-        if let Err(_) = write!(stdin, "{}", msg) {
+    if let Some(mut stdin) = child.stdin.take()
+        && write!(stdin, "{}", msg).is_err() {
             eprintln!("failed to write to less stdin");
             return ExitCode::FAILURE;
-        }
     }
 
     match child.wait() {

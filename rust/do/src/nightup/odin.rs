@@ -37,10 +37,9 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
     // 抽出できた URL を格納する変数
     let mut nightly_date = String::new();
 
-    if let Some(caps) = re_date.captures(&contents) {
-        if let Some(mat) = caps.get(1) {
+    if let Some(caps) = re_date.captures(&contents) 
+        && let Some(mat) = caps.get(1) {
             nightly_date = mat.as_str().to_string();
-        }
     }
 
     if nightly_date.is_empty() {
@@ -132,7 +131,7 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
     }
 
     // 中身がファイル群だけになったワークスペースそのものを、そのまま dist_dir のパスへ移動リネームする
-    if let Err(e) = fs::rename(&work_dir_path, &target_path) {
+    if let Err(e) = fs::rename(&work_dir_path, target_path) {
         eprintln!("failed to move extracted directory to dist: {}", e);
         return ExitCode::FAILURE;
     }

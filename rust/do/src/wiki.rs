@@ -12,10 +12,10 @@ fn decode_unicode_escape(s: &str) -> String {
         .expect("failed to compile wiki.decode_unicode_escape.re (regex)");
     re.replace_all(s, |caps: &regex::Captures| {
         let hex_str = &caps[1];
-        if let Ok(code_point) = u32::from_str_radix(hex_str, 16) {
-            if let Some(c) = std::char::from_u32(code_point) {
+        if let Ok(code_point) = u32::from_str_radix(hex_str, 16) 
+            && let Some(c) = std::char::from_u32(code_point) {
                 return c.to_string();
-            }
+            
         }
         caps[0].to_string()
     })
@@ -98,7 +98,7 @@ pub fn run(args: &[String]) -> ExitCode {
 
     if let Some(mut stdin) = child.stdin.take() {
         for article in articles {
-            if let Err(_) = writeln!(stdin, "{}", article) {
+            if  writeln!(stdin, "{}", article).is_err() {
                 eprintln!("failed to write to less stdin");
                 return ExitCode::FAILURE;
             }

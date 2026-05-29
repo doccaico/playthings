@@ -38,10 +38,9 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
     // 抽出できた URL を格納する変数
     let mut download_url = String::new();
 
-    if let Some(caps) = re_url.captures(&contents) {
-        if let Some(mat) = caps.get(1) {
+    if let Some(caps) = re_url.captures(&contents) 
+        && let Some(mat) = caps.get(1) {
             download_url = mat.as_str().to_string();
-        }
     }
 
     if download_url.is_empty() {
@@ -133,7 +132,7 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
 
     // 中身がファイル群だけになったワークスペースそのものを
     // そのまま dist_dir のパスへ移動リネームする
-    if let Err(e) = fs::rename(&work_dir_path, &target_path) {
+    if let Err(e) = fs::rename(&work_dir_path, target_path) {
         eprintln!("failed to move extracted directory to dist: {}", e);
         return ExitCode::FAILURE;
     }

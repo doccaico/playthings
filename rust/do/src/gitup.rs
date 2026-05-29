@@ -7,7 +7,7 @@ Usage:
     do.exe gitup     MESSAGE";
 
 pub fn run(args: &[String]) -> ExitCode {
-    if args.len() == 0 || args.len() > 2 {
+    if args.is_empty() || args.len() > 2 {
         eprintln!("{}", HELP_MSG);
         return ExitCode::FAILURE;
     }

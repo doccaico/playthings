@@ -7,7 +7,8 @@ Usage:
     do.exe shitaraba GENRE ID NUMBER";
 
 fn convert_cp(code_point: &str) -> Result<String, String> {
-    let cp_u32 = u32::from_str_radix(code_point, 10)
+    let cp_u32 = code_point
+        .parse::<u32>()
         .map_err(|_| "failed to 'u32::from_str_radix'".to_string())?;
 
     char::from_u32(cp_u32)
@@ -96,10 +97,12 @@ pub fn run(args: &[String]) -> ExitCode {
 
     if let Some(mut stdin) = child.stdin.take() {
         for (name, date, post) in datum {
-            if let Err(_) = write!(
+            if write!(
                 stdin,
                 "\x1b[36m{name}\x1b[0m: \x1b[32m{date}\x1b[0m\n{post}"
-            ) {
+            )
+            .is_err()
+            {
                 eprintln!("failed to write to less stdin");
                 return ExitCode::FAILURE;
             }

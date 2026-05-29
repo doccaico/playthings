@@ -94,16 +94,14 @@ Usage:
 
 pub fn run(args: &[String]) -> ExitCode {
     if args.len() == 1 && (args[0] == "-h" || args[0] == "--help") {
-        match utils::view_help_msg(HELP_MSG) {
-            ExitCode::FAILURE => return ExitCode::FAILURE,
-            _ => {}
+        if utils::view_help_msg(HELP_MSG) == ExitCode::FAILURE {
+            return ExitCode::FAILURE;
         }
         return ExitCode::SUCCESS;
     }
     if args.len() != 2 {
-        match utils::view_help_msg(HELP_MSG) {
-            ExitCode::FAILURE => return ExitCode::FAILURE,
-            _ => {}
+        if utils::view_help_msg(HELP_MSG) == ExitCode::FAILURE {
+            return ExitCode::FAILURE;
         }
         return ExitCode::FAILURE;
     }
@@ -161,12 +159,12 @@ pub fn run(args: &[String]) -> ExitCode {
     };
 
     if let Some(mut stdin) = child.stdin.take() {
-        if let Err(_) = writeln!(stdin, "\x1b[36m{book}\x1b[0m:\x1b[32m{chapter}\x1b[0m") {
+        if writeln!(stdin, "\x1b[36m{book}\x1b[0m:\x1b[32m{chapter}\x1b[0m").is_err() {
             eprintln!("failed to write to less stdin");
             return ExitCode::FAILURE;
         }
         for data in datum {
-            if let Err(_) = writeln!(stdin, "{}", data) {
+            if writeln!(stdin, "{}", data).is_err() {
                 eprintln!("failed to write to less stdin");
                 return ExitCode::FAILURE;
             }
