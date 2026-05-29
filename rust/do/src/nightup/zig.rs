@@ -25,7 +25,7 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
     println!("Download (index.json) is done");
 
     let contents = match String::from_utf8(output.stdout) {
-        Ok(contens) => contens,
+        Ok(contents) => contents,
         Err(_) => {
             eprintln!("failed to 'String::from_utf8'");
             return ExitCode::FAILURE;

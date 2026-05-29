@@ -12,7 +12,7 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
             "-sSL",
             "-A",
             "Mozilla/5.0",
-            "https://f001.backblazeb2.com/file/odin-binaries/nightly.json",
+            "https://api.github.com/repos/vlang/v/releases/latest",
         ])
         .output()
     {
@@ -33,30 +33,25 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
     };
 
     // ダウンロードURLを取得する
-    let re_date = Regex::new(r#""([\d]{4}-[\d]{2}-[\d]{2})T"#)
-        .expect("failed to compile odin.re_date (regex)");
+    let re_url = Regex::new(r#""browser_download_url":\s*"(https://[^"]+v_windows\.zip)""#)
+        .expect("failed to compile v.re_url (regex)");
 
     // 抽出できた URL を格納する変数
-    let mut nightly_date = String::new();
+    let mut download_url = String::new();
 
-    if let Some(caps) = re_date.captures(&contents) 
+    if let Some(caps) = re_url.captures(&contents) 
         && let Some(mat) = caps.get(1) {
-            nightly_date = mat.as_str().to_string();
+            download_url = mat.as_str().to_string();
     }
 
-    if nightly_date.is_empty() {
-        eprintln!("failed to find ZIP URL for odin-windows-amd64 nightly");
+    if download_url.is_empty() {
+        eprintln!("failed to find ZIP URL for v-windows");
         return ExitCode::FAILURE;
     }
 
-    let zip_name = format!("odin-windows-amd64-nightly%2B{}.zip", nightly_date);
-    let download_url = format!(
-        "https://f001.backblazeb2.com/file/odin-binaries/nightly/{}",
-        zip_name
-    );
     println!("Download URL: {}", download_url);
 
-    let work_dir_name = "odin-nightly-upgrade-working";
+    let work_dir_name = "v-latest-upgrade-working";
     let work_dir_path = Path::new(download_dir).join(work_dir_name);
 
     if work_dir_path.exists() {
@@ -79,7 +74,7 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
         active: true,
     };
 
-    let local_zip = "odin-nightly-latest.zip";
+    let local_zip = "v-latest.zip";
 
     let output = match Command::new("curl")
         .current_dir(&work_dir_path)

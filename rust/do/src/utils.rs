@@ -1,6 +1,6 @@
+use std::fs;
 use std::io::Write;
 use std::path::PathBuf;
-use std::fs;
 use std::process::{Command, ExitCode, Stdio};
 
 pub fn view_help_msg(msg: &str) -> ExitCode {
@@ -19,9 +19,10 @@ pub fn view_help_msg(msg: &str) -> ExitCode {
     };
 
     if let Some(mut stdin) = child.stdin.take()
-        && write!(stdin, "{}", msg).is_err() {
-            eprintln!("failed to write to less stdin");
-            return ExitCode::FAILURE;
+        && write!(stdin, "{}", msg).is_err()
+    {
+        eprintln!("failed to write to less stdin");
+        return ExitCode::FAILURE;
     }
 
     match child.wait() {
@@ -42,11 +43,8 @@ pub struct CleanupDir {
 impl Drop for CleanupDir {
     fn drop(&mut self) {
         if self.active && self.path.exists() {
-            if fs::remove_dir_all(&self.path).is_err() {
-                println!(r#"failed to cleaned up: "{}""#, self.path.display());
-            } else {
-                println!(r#"Automatically cleaned up: "{}""#, self.path.display());
-            }
+            fs::remove_dir_all(&self.path).ok();
+            println!(r#"Automatically cleaned up: "{}""#, self.path.display());
         }
     }
 }
