@@ -1,6 +1,7 @@
 use std::env;
 use std::process::ExitCode;
 
+mod delete_duplicate_path;
 mod diary_search;
 mod gitup;
 
@@ -30,6 +31,7 @@ fn main() -> ExitCode {
     match args[1].as_str() {
         "diary_search" => diary_search::run(&args[1..]),
         "gitup" => gitup::run(&args[1..]),
+        "delete_duplicate_path" => delete_duplicate_path::run(),
         _ => ExitCode::FAILURE,
     }
 }
