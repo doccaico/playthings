@@ -7,58 +7,81 @@ Usage:
     do.exe gitup     MESSAGE";
 
 pub fn run(args: &[String]) -> ExitCode {
-    if args.len() == 1 || args.len() > 3 {
+    if args.len() == 0 || args.len() > 2 {
         eprintln!("{}", HELP_MSG);
         return ExitCode::FAILURE;
     }
-    if args[1] == "-h" || args[1] == "--help" {
+    if args[0] == "-h" || args[0] == "--help" {
         println!("{}", HELP_MSG);
         return ExitCode::SUCCESS;
     }
 
-    let (dir_path, commig_msg) = {
-        if args.len() == 3 {
-            let path = Path::new(&args[1]);
+    let (dir_path, commig_msg): (&str, &str) = {
+        if args.len() == 2 {
+            let path = Path::new(&args[0]);
             if !path.is_dir() {
-                eprintln!("Does not exist: {}", args[1]);
+                eprintln!("Does not exist: {}", args[0]);
                 return ExitCode::FAILURE;
             }
-            (&args[1], &args[2])
+            (&args[0], &args[1])
         } else {
-            (&".".to_string(), &args[1])
+            (".", &args[0])
         }
     };
 
-    let output = Command::new("git")
+    let output = match Command::new("git")
         .current_dir(dir_path)
         .args(["status", "--porcelain"])
         .output()
-        .expect("failed to 'git status --porcelain' process");
+    {
+        Ok(out) => out,
+        Err(_) => {
+            eprintln!("'git' command not found");
+            return ExitCode::FAILURE;
+        }
+    };
 
-    if "".as_bytes() == output.stdout.trim_ascii_end() {
-        eprintln!("There is no need to update");
+    if !output.status.success() {
+        eprintln!("'{}' is not a git repository (or git error)", dir_path);
+        return ExitCode::FAILURE;
+    }
+
+    if output.stdout.trim_ascii_end().is_empty() {
+        println!("There is no need to update");
         return ExitCode::SUCCESS;
     }
 
-    Command::new("git")
+    let add_status = Command::new("git")
         .current_dir(dir_path)
         .args(["add", "."])
         .status()
-        .expect("failed to 'git add .' process");
+        .unwrap();
 
-    Command::new("git")
+    if !add_status.success() {
+        println!("failed to execute 'git add'");
+        return ExitCode::FAILURE;
+    }
+
+    let commit_status = Command::new("git")
         .current_dir(dir_path)
         .args(["commit", "-m", commig_msg])
         .status()
-        .unwrap_or_else(|_| panic!("failed to 'git commit \"{}\"' process", commig_msg));
+        .expect("failed to execute 'git commit'");
 
-    let output = Command::new("git")
+    if !commit_status.success() {
+        return ExitCode::FAILURE;
+    }
+
+    let push_status = Command::new("git")
         .current_dir(dir_path)
         .arg("push")
-        .output()
-        .expect("failed to 'git push' process");
+        .status()
+        .expect("failed to execute 'git push'");
 
-    println!("{}", String::from_utf8_lossy(&output.stdout));
-
-    ExitCode::SUCCESS
+    if push_status.success() {
+        ExitCode::SUCCESS
+    } else {
+        eprintln!("git push failed");
+        ExitCode::FAILURE
+    }
 }

@@ -16,16 +16,16 @@ fn convert_cp(code_point: &str) -> Result<String, String> {
 }
 
 pub fn run(args: &[String]) -> ExitCode {
-    if args.len() == 2 && (args[1] == "-h" || args[1] == "--help") {
+    if args.len() == 1 && (args[0] == "-h" || args[0] == "--help") {
         println!("{}", HELP_MSG);
         return ExitCode::SUCCESS;
     }
-    if args.len() != 4 {
+    if args.len() != 3 {
         eprintln!("{}", HELP_MSG);
         return ExitCode::FAILURE;
     }
 
-    let (genre, id, number) = (&args[1], &args[2], &args[3]);
+    let (genre, id, number) = (&args[0], &args[1], &args[2]);
 
     let url = format!("https://jbbs.shitaraba.net/bbs/read.cgi/{genre}/{id}/{number}/l50");
 

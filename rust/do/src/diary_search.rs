@@ -6,11 +6,11 @@ Usage:
     do.exe diary_search WORD";
 
 pub fn run(args: &[String]) -> ExitCode {
-    if args.len() == 2 && (args[1] == "-h" || args[1] == "--help") {
+    if args.len() == 1 && (args[0] == "-h" || args[0] == "--help") {
         println!("{}", HELP_MSG);
         return ExitCode::SUCCESS;
     }
-    if args.len() != 2 {
+    if args.len() != 1 {
         eprintln!("{}", HELP_MSG);
         return ExitCode::FAILURE;
     }
@@ -31,7 +31,7 @@ pub fn run(args: &[String]) -> ExitCode {
             "--line-number",
             "--ignore-case",
             "--sort=path",
-            &args[1],
+            &args[0],
             &diary_dir,
         ])
         .output()
@@ -44,7 +44,7 @@ pub fn run(args: &[String]) -> ExitCode {
     };
 
     if output.stdout.is_empty() {
-        println!("No matches found for '{}'.", &args[1]);
+        println!("No matches found for '{}'.", &args[0]);
         return ExitCode::SUCCESS;
     }
 
