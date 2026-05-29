@@ -5,6 +5,7 @@ edition = "2024"
 
 [dependencies]
 regex = "1.12.3"
+rust-ini = "0.21.3"
 
  [profile.release]
  strip = true

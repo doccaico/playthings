@@ -123,9 +123,6 @@ pub fn run(args: &[String]) -> ExitCode {
         }
     };
 
-    let re =
-        Regex::new(r#"(?ms)content">(.+?)</span>"#).expect("failed to compile verse.main regex");
-
     let contents = match String::from_utf8(output.stdout) {
         Ok(contens) => contens,
         Err(_) => {
@@ -133,6 +130,9 @@ pub fn run(args: &[String]) -> ExitCode {
             return ExitCode::FAILURE;
         }
     };
+
+    let re =
+        Regex::new(r#"(?ms)content">(.+?)</span>"#).expect("failed to compile verse.main regex");
 
     let mut datum = vec![];
     for (_, [body]) in re.captures_iter(&contents).map(|c| c.extract()) {
