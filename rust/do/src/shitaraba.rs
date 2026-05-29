@@ -32,7 +32,7 @@ pub fn run(args: &[String]) -> ExitCode {
     let output = match Command::new("cmd")
         .args([
             "/C",
-            &format!("curl -sSL {url} | busybox64u iconv -f EUC-JP -t UTF-8"),
+            &format!(r#"curl -sSL -A "Mozilla/5.0" {url} | busybox64u iconv -f EUC-JP -t UTF-8"#),
         ])
         .output()
     {
@@ -44,8 +44,8 @@ pub fn run(args: &[String]) -> ExitCode {
     };
 
     let re = Regex::new(r"<dt(?ms)\b.+?<b>(\w+?)</b>.+?：(.+?)</dt>.+?<dd>(.+?)</dd>")
-        .expect("failed to compile main regex");
-    let re_emoji = Regex::new(r"&#(\d+?);").expect("failed to compile emoji regex");
+        .expect("failed to compile shitaraba.main regex");
+    let re_emoji = Regex::new(r"&#(\d+?);").expect("failed to compile shitaraba.emoji regex");
 
     let contents = match String::from_utf8(output.stdout) {
         Ok(contens) => contens,
@@ -55,7 +55,7 @@ pub fn run(args: &[String]) -> ExitCode {
         }
     };
 
-    let mut dates = vec![];
+    let mut datum = vec![];
     for (_, [name, date, post]) in re.captures_iter(&contents).map(|c| c.extract()) {
         let date = date.trim_ascii_end();
         let post = post
@@ -82,7 +82,7 @@ pub fn run(args: &[String]) -> ExitCode {
             return ExitCode::FAILURE;
         }
 
-        dates.push((name, date, post.into_owned()));
+        datum.push((name, date, post.into_owned()));
     }
 
     let mut child = match Command::new("less")
@@ -98,7 +98,7 @@ pub fn run(args: &[String]) -> ExitCode {
     };
 
     if let Some(mut stdin) = child.stdin.take() {
-        for (name, date, post) in dates {
+        for (name, date, post) in datum {
             if let Err(_) = writeln!(
                 stdin,
                 "\x1b[36m{name}\x1b[0m: \x1b[32m{date}\x1b[0m\n{post}"

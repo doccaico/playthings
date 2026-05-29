@@ -69,6 +69,7 @@ pub fn run(args: &[String]) -> ExitCode {
         .expect("failed to execute 'git commit'");
 
     if !commit_status.success() {
+        println!("'git commit' failed");
         return ExitCode::FAILURE;
     }
 

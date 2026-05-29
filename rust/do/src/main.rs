@@ -1,10 +1,14 @@
 use std::env;
 use std::process::ExitCode;
 
+mod utils;
+// use crate::utils;
+
 mod delete_duplicate_path;
 mod diary_search;
 mod gitup;
 mod shitaraba;
+mod verse;
 
 const HELP_MSG: &str = "
 Usage:
@@ -34,6 +38,7 @@ fn main() -> ExitCode {
         "gitup" => gitup::run(&args[2..]),
         "delete_duplicate_path" => delete_duplicate_path::run(),
         "shitaraba" => shitaraba::run(&args[2..]),
+        "verse" => verse::run(&args[2..]),
         _ => {
             eprintln!("unknown command '{}'\n{}", args[1], HELP_MSG);
             ExitCode::FAILURE
