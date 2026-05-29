@@ -45,7 +45,7 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
     }
 
     if download_url.is_empty() {
-        eprintln!("failed to find tarball URL for x86_64-windows master");
+        eprintln!("failed to find ZIP URL for x86_64-windows master");
         return ExitCode::FAILURE;
     }
     println!("Download URL: {}", download_url);
@@ -85,20 +85,20 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
     println!("Download (ZIP) is done: {}", file_name);
 
     // 解凍する
-    let output = match Command::new("7za")
+    let output = match Command::new("tar")
         .current_dir(download_dir)
-        .args(["x", "-aoa", file_name, "-bso0", "-bsp0"])
+        .args(["-xf", file_name])
         .output()
     {
         Ok(out) => out,
         Err(_) => {
-            eprintln!("failed to '7za'");
+            eprintln!("failed to run OS native 'tar'. Make sure Windows 10/11 is updated.");
             return ExitCode::FAILURE;
         }
     };
 
     if !output.status.success() {
-        eprintln!("7za failed with status: {:?}", output.status);
+        eprintln!("tar failed with status: {:?}", output.status);
         return ExitCode::FAILURE;
     }
 

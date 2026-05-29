@@ -2,8 +2,8 @@ use ini::Ini;
 use std::env;
 use std::process::ExitCode;
 
-mod odin;
-mod zig; // curl, 7za // curl, 7za
+mod odin; // curl, tar
+mod zig; // curl, tar
 
 const HELP_MSG: &str = "
 Usage:

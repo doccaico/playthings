@@ -99,20 +99,12 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
         Ok(out) => out,
         Err(_) => {
             eprintln!("failed to run OS native 'tar'. Make sure Windows 10/11 is updated.");
-            if let Err(e) = fs::remove_dir_all(&work_dir_path) {
-                eprintln!("failed to remove {}: {}", work_dir_path.display(), e);
-                return ExitCode::FAILURE;
-            }
             return ExitCode::FAILURE;
         }
     };
 
     if !output.status.success() {
         eprintln!("tar failed with status: {:?}", output.status);
-        if let Err(e) = fs::remove_dir_all(&work_dir_path) {
-            eprintln!("failed to remove {}: {}", work_dir_path.display(), e);
-            return ExitCode::FAILURE;
-        }
         return ExitCode::FAILURE;
     }
     println!("Extraction is done");
@@ -141,12 +133,7 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
     // 中身がファイル群だけになったワークスペースそのものを、そのまま dist_dir のパスへ移動リネームする
     if let Err(e) = fs::rename(&work_dir_path, &target_path) {
         eprintln!("failed to move extracted directory to dist: {}", e);
-        // 万が一失敗した場合、作成したワークスペースの後始末を試みる
-        if let Err(e) = fs::remove_dir_all(&work_dir_path) {
-            eprintln!("failed to remove {}: {}", work_dir_path.display(), e);
-            return ExitCode::FAILURE;
-        }
-        println!(r#"Removed: "{}""#, work_dir_path.display());
+        return ExitCode::FAILURE;
     }
     println!(
         r#"Moved: "{}" to "{}""#,
