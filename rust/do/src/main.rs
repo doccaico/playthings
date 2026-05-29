@@ -4,11 +4,11 @@ use std::process::ExitCode;
 mod utils;
 
 mod delete_duplicate_path;
-mod diary_search; // less, rg
-mod gitup; // git
-mod shitaraba; // busybox64u, curl, less
-mod verse; // less, curl
-mod wiki; // less, curl
+mod diary_search;
+mod gitup;
+mod shitaraba;
+mod verse;
+mod wiki;
 
 #[path = "nightup/nightup.rs"]
 mod nightup; // curl, 7za

@@ -1,6 +1,12 @@
-### do.exe (Windows only)
+### Do (Windows only .-.)
 
-- [Color](https://stackoverflow.com/questions/6297072/color-for-the-prompt-just-the-prompt-proper-in-cmd-exe-and-powershell)
+### Required Softwares
+- busybox64u
+- curl
+- git
+- less
+- rg
+- tar
 
 ### Build and Minimizing Binary Size
 ```sh
@@ -12,3 +18,6 @@ $ upx --best --lzma do.exe
 ```sh
 $ cargo clippy 2>&1 | less
 ```
+
+### Memo
+- [Color](https://stackoverflow.com/questions/6297072/color-for-the-prompt-just-the-prompt-proper-in-cmd-exe-and-powershell)

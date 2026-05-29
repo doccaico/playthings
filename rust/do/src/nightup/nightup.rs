@@ -2,16 +2,17 @@ use ini::Ini;
 use std::env;
 use std::process::ExitCode;
 
-mod odin; // curl, tar
+mod go;
+mod odin;
 mod v;
-mod zig; // curl, tar // curl, tar
+mod zig;
 
 const HELP_MSG: &str = "
 Usage:
-    do.exe nightup zig
+    do.exe nightup go
     do.exe nightup odin
     do.exe nightup v
-    do.exe nightup go";
+    do.exe nightup zig";
 
 pub fn run(args: &[String]) -> ExitCode {
     if args.len() == 1 && (args[0] == "-h" || args[0] == "--help") {
@@ -81,6 +82,16 @@ pub fn run(args: &[String]) -> ExitCode {
                 }
             };
             v::run(dist_dir, &download_dir)
+        }
+        "go" => {
+            let dist_dir = match section.get("go") {
+                Some(path) => path,
+                None => {
+                    eprintln!(r#"nightup ini: not found path: "go""#);
+                    return ExitCode::FAILURE;
+                }
+            };
+            go::run(dist_dir, &download_dir)
         }
         _ => {
             eprintln!("nightup: unknown command '{}'\n{}", args[0], HELP_MSG);

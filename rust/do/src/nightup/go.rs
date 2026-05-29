@@ -8,12 +8,7 @@ use crate::utils;
 pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
     // index.jsonを取得する
     let output = match Command::new("curl")
-        .args([
-            "-sSL",
-            "-A",
-            "Mozilla/5.0",
-            "https://api.github.com/repos/vlang/v/releases/latest",
-        ])
+        .args(["-sSL", "-A", "Mozilla/5.0", "https://go.dev/dl/?mode=json"])
         .output()
     {
         Ok(out) => out,
@@ -33,26 +28,28 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
     };
 
     // ダウンロードURLを取得する
-    let re_url = Regex::new(r#""browser_download_url":\s*"(https://[^"]+v_windows\.zip)""#)
-        .expect("failed to compile v.re_url (regex)");
+    let re_url = Regex::new(r#""filename":\s*"(go[0-9.]+\.windows-amd64\.zip)""#)
+        .expect("failed to compile go.re_url (regex)");
 
     // 抽出できた URL を格納する変数
-    let mut download_url = String::new();
+    let mut filename = String::new();
 
     if let Some(caps) = re_url.captures(&contents)
         && let Some(mat) = caps.get(1)
     {
-        download_url = mat.as_str().to_string();
+        filename = mat.as_str().to_string();
     }
 
-    if download_url.is_empty() {
-        eprintln!("failed to find ZIP URL for v-windows");
+    if filename.is_empty() {
+        eprintln!("failed to find ZIP URL for go-windows-amd64");
         return ExitCode::FAILURE;
     }
 
+    let download_url = format!("https://go.dev/dl/{}", filename);
+
     println!("Download URL: {}", download_url);
 
-    let work_dir_name = "v-latest-upgrade-working";
+    let work_dir_name = "go-latest-upgrade-working";
     let work_dir_path = Path::new(download_dir).join(work_dir_name);
 
     if work_dir_path.exists() {
@@ -75,7 +72,7 @@ pub fn run(dist_dir: &str, download_dir: &str) -> ExitCode {
         active: true,
     };
 
-    let local_zip = "v-latest.zip";
+    let local_zip = "go-latest.zip";
 
     let output = match Command::new("curl")
         .current_dir(&work_dir_path)
