@@ -7,3 +7,8 @@
 $ cargo build --release
 $ upx --best --lzma do.exe
 ```
+
+### Clippy
+```sh
+$ cargo clippy 2>&1 | less
+```
