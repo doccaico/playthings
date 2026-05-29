@@ -17,8 +17,7 @@ pub fn run() -> ExitCode {
         }
     }
 
-    // DEBUG
-    // println!("{}", result);
+    print!("{}", result);
 
     ExitCode::SUCCESS
 }
