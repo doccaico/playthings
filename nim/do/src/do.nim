@@ -9,7 +9,7 @@ import ./[utils]
 import ./[
   diary_search,            # less, rg
   gitup,                   # git
-  # shitaraba,               # less
+  shitaraba,               # less
   # delete_duplicate_path,
   # verse,                   # less
   # wiki,                    # less, jq
@@ -37,7 +37,7 @@ proc main(argc: int, argv: seq[string]) =
   case argv[0]
   of "diary_search": diary_search.main(argc - 1, argv[1..^1])
   of "gitup": gitup.main(argc - 1, argv[1..^1])
-  # of "shitaraba": shitaraba.main(argc - 1, argv[1..^1])
+  of "shitaraba": shitaraba.main(argc - 1, argv[1..^1])
   # of "delete_duplicate_path": delete_duplicate_path.main()
   # of "verse": verse.main(argc - 1, argv[1..^1])
   # of "wiki": wiki.main(argc - 1, argv[1..^1])

@@ -6,7 +6,9 @@ import ./[utils]
 
 const HELP_MSG = """
 Usage:
-    do.exe shitaraba GENRE ID NUMBER"""
+    do.exe shitaraba [OPTION] GENRE ID NUMBER
+OPTION:
+    -h, --help                 ヘルプメッセージを表示"""
 
 proc convertEmoji(m: RegexMatch2, s: string): string =
   var res: int
