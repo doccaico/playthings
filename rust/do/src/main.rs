@@ -3,20 +3,22 @@ use std::process::ExitCode;
 
 mod utils;
 
-mod delete_duplicate_path;
 mod diary_search;
-mod gitup;
-mod shitaraba;
-mod verse;
-mod wiki;
+// mod delete_duplicate_path;
+// mod gitup;
+// mod shitaraba;
+// mod verse;
+// mod wiki;
 
-#[path = "nightup/nightup.rs"]
-mod nightup;
+// #[path = "nightup/nightup.rs"]
+// mod nightup;
 
 const HELP_MSG: &str = "
 Usage:
-    do.exe KIND
-KIND:
+    do.exe [OPTION] COMMAND [ARGS...]
+OPTION:
+    -h, --help                 ヘルプメッセージを表示
+COMMAND:
     diary_search                環境変数(DIARY_DIR)にある日記を検索
     gitup                       GithubにPush
     shitaraba                   Shitarabaを閲覧
@@ -32,21 +34,22 @@ fn main() -> ExitCode {
         eprintln!("{}", HELP_MSG);
         return ExitCode::FAILURE;
     }
-    if args[1] == "-h" || args[1] == "--help" {
+    if args.len() == 2 && (args[1] == "-h" || args[1] == "--help") {
         println!("{}", HELP_MSG);
         return ExitCode::SUCCESS;
     }
 
     match args[1].as_str() {
         "diary_search" => diary_search::run(&args[2..]),
-        "gitup" => gitup::run(&args[2..]),
-        "delete_duplicate_path" => delete_duplicate_path::run(),
-        "shitaraba" => shitaraba::run(&args[2..]),
-        "verse" => verse::run(&args[2..]),
-        "wiki" => wiki::run(&args[2..]),
-        "nightup" => nightup::run(&args[2..]),
+        // "gitup" => gitup::run(&args[2..]),
+        // "delete_duplicate_path" => delete_duplicate_path::run(),
+        // "shitaraba" => shitaraba::run(&args[2..]),
+        // "verse" => verse::run(&args[2..]),
+        // "wiki" => wiki::run(&args[2..]),
+        // "nightup" => nightup::run(&args[2..]),
         _ => {
-            eprintln!("unknown command '{}'\n{}", args[1], HELP_MSG);
+            eprintln!("unknown command '{}'", args[1]);
+            eprintln!("{}", HELP_MSG);
             ExitCode::FAILURE
         }
     }
