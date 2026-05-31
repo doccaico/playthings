@@ -64,7 +64,7 @@ pub fn run(args: &[String]) -> ExitCode {
         return ExitCode::FAILURE;
     }
 
-    // lessにデータを流し終えたら、明示的に書き込みを終了させる
+    // 書き込みが完了したため、明示的に `stdin` を閉じて less に通知する
     drop(stdin);
 
     match child.wait() {

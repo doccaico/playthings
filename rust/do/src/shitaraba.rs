@@ -4,12 +4,14 @@ use std::process::{Command, ExitCode, Stdio};
 
 const HELP_MSG: &str = "
 Usage:
-    do.exe shitaraba GENRE ID NUMBER";
+    do.exe shitaraba [OPTION] GENRE ID NUMBER
+OPTION:
+    -h, --help                 ヘルプメッセージを表示";
 
 fn convert_cp(code_point: &str) -> Result<String, String> {
     let cp_u32 = code_point
         .parse::<u32>()
-        .map_err(|_| "failed to 'u32::from_str_radix'".to_string())?;
+        .map_err(|_| "failed to 'parse::<u32>'".to_string())?;
 
     char::from_u32(cp_u32)
         .map(|c| c.to_string())
@@ -30,19 +32,13 @@ pub fn run(args: &[String]) -> ExitCode {
 
     let url = format!("https://jbbs.shitaraba.net/bbs/read.cgi/{genre}/{id}/{number}/l50");
 
-    let output = match Command::new("cmd")
+    let output = Command::new("cmd")
         .args([
             "/C",
             &format!(r#"curl -sSL -A "Mozilla/5.0" {url} | busybox64u iconv -f EUC-JP -t UTF-8"#),
         ])
         .output()
-    {
-        Ok(out) => out,
-        Err(_) => {
-            eprintln!("failed to 'curl and busybox64u iconv'");
-            return ExitCode::FAILURE;
-        }
-    };
+        .expect("failed to 'curl and busybox64u iconv'");
 
     let re = Regex::new(r"<dt(?ms)\b.+?<b>(\w+?)</b>.+?：(.+?)</dt>.+?<dd>(.+?)</dd>")
         .expect("failed to compile shitaraba.run.re (regex)");
@@ -50,13 +46,7 @@ pub fn run(args: &[String]) -> ExitCode {
         Regex::new(r"&#(\d+?);").expect("failed to compile shitaraba.run.re_emoji (regex)");
     let re_tag = Regex::new(r#"<[^>]*?>"#).expect("failed to compile shitaraba.run.re_tag (regex)");
 
-    let contents = match String::from_utf8(output.stdout) {
-        Ok(contens) => contens,
-        Err(_) => {
-            eprintln!("failed to 'String::from_utf8'");
-            return ExitCode::FAILURE;
-        }
-    };
+    let contents = String::from_utf8(output.stdout).expect("failed to 'String::from_utf8'");
 
     let mut datum = vec![];
     for caps in re.captures_iter(&contents) {
@@ -81,33 +71,33 @@ pub fn run(args: &[String]) -> ExitCode {
         datum.push((name, date, final_post));
     }
 
-    let mut child = match Command::new("less")
-        .args(["-R", "--silent"])
+    let mut child = Command::new("less")
+        .args(["-R", "-i", "--silent"])
         .stdin(Stdio::piped())
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit())
         .spawn()
-    {
-        Ok(c) => c,
-        Err(_) => {
-            eprintln!("failed to spawn 'less'");
+        .expect("failed to spawn 'less'");
+
+    // `stdin` を `take()` で完全に外に切り出す
+    let mut stdin = child.stdin.take().expect("failed to open stdin");
+
+    for (name, date, post) in datum {
+        if write!(
+            stdin,
+            "\x1b[36m{name}\x1b[0m: \x1b[32m{date}\x1b[0m\n{post}"
+        )
+        .is_err()
+        {
+            eprintln!("failed to write to less stdin");
+            let _ = child.kill();
+            let _ = child.wait();
             return ExitCode::FAILURE;
         }
-    };
-
-    if let Some(mut stdin) = child.stdin.take() {
-        for (name, date, post) in datum {
-            if write!(
-                stdin,
-                "\x1b[36m{name}\x1b[0m: \x1b[32m{date}\x1b[0m\n{post}"
-            )
-            .is_err()
-            {
-                eprintln!("failed to write to less stdin");
-                return ExitCode::FAILURE;
-            }
-        }
     }
+
+    // 書き込みが完了したため、明示的に `stdin` を閉じて less に通知する
+    drop(stdin);
 
     match child.wait() {
         Ok(status) if status.success() => ExitCode::SUCCESS,
