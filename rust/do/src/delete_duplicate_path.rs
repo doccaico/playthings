@@ -3,13 +3,7 @@ use std::env;
 use std::process::ExitCode;
 
 pub fn run() -> ExitCode {
-    let paths = match env::var("PATH") {
-        Ok(value) => value,
-        Err(err) => {
-            eprintln!("couldn't interpret PATH: {}", err);
-            return ExitCode::FAILURE;
-        }
-    };
+    let paths = env::var("PATH").expect("couldn't interpret 'PATH'");
 
     let mut set = HashSet::new();
     let mut path_vec = vec![];

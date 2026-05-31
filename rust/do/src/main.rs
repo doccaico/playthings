@@ -3,8 +3,8 @@ use std::process::ExitCode;
 
 mod utils;
 
+mod delete_duplicate_path;
 mod diary_search;
-// mod delete_duplicate_path;
 // mod gitup;
 // mod shitaraba;
 // mod verse;
@@ -42,7 +42,7 @@ fn main() -> ExitCode {
     match args[1].as_str() {
         "diary_search" => diary_search::run(&args[2..]),
         // "gitup" => gitup::run(&args[2..]),
-        // "delete_duplicate_path" => delete_duplicate_path::run(),
+        "delete_duplicate_path" => delete_duplicate_path::run(),
         // "shitaraba" => shitaraba::run(&args[2..]),
         // "verse" => verse::run(&args[2..]),
         // "wiki" => wiki::run(&args[2..]),
