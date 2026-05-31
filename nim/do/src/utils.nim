@@ -1,7 +1,7 @@
 import std/[os, osproc, strformat]
 
 
-proc writeHelpAndExit*(stdio: File, msg: string, code: int) {.noreturn.} =
+proc printMsgAndExit*(stdio: File, msg: string, code: int) {.noreturn.} =
   stdio.writeLine msg
   quit code
 
