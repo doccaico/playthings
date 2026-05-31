@@ -5,7 +5,7 @@ mod utils;
 
 mod delete_duplicate_path;
 mod diary_search;
-// mod gitup;
+mod gitup;
 // mod shitaraba;
 // mod verse;
 // mod wiki;
@@ -41,7 +41,7 @@ fn main() -> ExitCode {
 
     match args[1].as_str() {
         "diary_search" => diary_search::run(&args[2..]),
-        // "gitup" => gitup::run(&args[2..]),
+        "gitup" => gitup::run(&args[2..]),
         "delete_duplicate_path" => delete_duplicate_path::run(),
         // "shitaraba" => shitaraba::run(&args[2..]),
         // "verse" => verse::run(&args[2..]),
