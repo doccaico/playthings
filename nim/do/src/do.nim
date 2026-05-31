@@ -8,7 +8,7 @@ import ./[utils]
 
 import ./[
   diary_search,            # less, rg
-  # gitup,                   # git
+  gitup,                   # git
   # shitaraba,               # less
   # delete_duplicate_path,
   # verse,                   # less
@@ -31,19 +31,17 @@ COMMAND:
 
 proc main(argc: int, argv: seq[string]) =
   if argc == 0:
-    writeHelpAndExit stderr, HELP_MSG, QuitFailure
+    printMsgAndExit stderr, HELP_MSG, QuitFailure
   if argv[0] == "-h" or argv[0] == "--help":
-    writeHelpAndExit stdout, HELP_MSG, QuitSuccess
+    printMsgAndExit stdout, HELP_MSG, QuitSuccess
   case argv[0]
   of "diary_search": diary_search.main(argc - 1, argv[1..^1])
-  # of "gitup": gitup.main(argc - 1, argv[1..^1])
+  of "gitup": gitup.main(argc - 1, argv[1..^1])
   # of "shitaraba": shitaraba.main(argc - 1, argv[1..^1])
   # of "delete_duplicate_path": delete_duplicate_path.main()
   # of "verse": verse.main(argc - 1, argv[1..^1])
   # of "wiki": wiki.main(argc - 1, argv[1..^1])
-  else:
-    stdin.writeLine fmt"unknown command '{argv[0]}'"
-    writeHelpAndExit stderr, HELP_MSG, QuitFailure
+  else: printMsgAndExit stderr, fmt"unknown command '{argv[0]}'\n{HELP_MSG}", QuitFailure
 
 when isMainModule:
   main(paramCount(), commandLineParams())

@@ -5,14 +5,16 @@ import ./[utils]
 
 const HELP_MSG = """
 Usage:
-    do.exe gitup DIR "Up"
-    do.exe gitup     "Up""""
+    do.exe gitup [OPTION] DIR "Up"
+    do.exe gitup [OPTION]     "Up"
+OPTION:
+    -h, --help                 ヘルプメッセージを表示"""
 
 proc main*(argc: int, argv: seq[string]) =
   if argc == 0 or argc > 2:
-    writeHelpAndExit stderr, HELP_MSG, 1
+    printMsgAndExit stderr, HELP_MSG, QuitFailure
   if argv[0] == "-h" or argv[0] == "--help":
-    writeHelpAndExit stdout, HELP_MSG, 0
+    printMsgAndExit stdout, HELP_MSG, QuitSuccess
 
   var dirPath: string
   var commitMsg: string
@@ -29,14 +31,29 @@ proc main*(argc: int, argv: seq[string]) =
   if dirPath != "":
     setCurrentDir dirpath
 
-  var ret = execCmdEx("git status --porcelain").output
-  ret.stripLineEnd()
-  if ret == "":
-    quit "There is no need to update.", 0
+  var statusRes = execCmdEx("git status --porcelain")
+  if statusRes.exitCode != 0:
+     printMsgAndExit stderr, "not a git repository (or git command failed)", QuitFailure
 
-  discard execCmd("git add .")
-  discard execCmd(fmt"""git commit -m "{commitMsg}"""")
-  stdout.writeLine execCmdEx("git push").output
+  let statusOutput = statusRes.output.strip()
+  if statusOutput == "":
+    printMsgAndExit stdout, "There is no need to update.", QuitSuccess
+
+  # git add
+  if execCmd("git add .") != 0:
+    printMsgAndExit stderr, "failed to run 'git add .'", QuitFailure
+
+  # git commit
+  let commitRes = execCmdEx(fmt"git commit -m {commitMsg.quoteShell}")
+  if commitRes.exitCode != 0:
+    stderr.writeLine commitRes.output
+    printMsgAndExit stderr, "failed to run 'git commit'", QuitFailure
+
+  # git push
+  let pushRes = execCmdEx("git push")
+  stdout.writeLine pushRes.output
+  if pushRes.exitCode != 0:
+    printMsgAndExit stderr, "failed to run 'git push'", QuitFailure
 
 when isMainModule:
   main(paramCount(), commandLineParams())
