@@ -53,12 +53,19 @@ pub fn run(args: &[String]) -> ExitCode {
         .spawn()
         .expect("failed to spawn 'less'");
 
-    if let Some(mut stdin) = child.stdin.take()
-        && stdin.write_all(&output.stdout).is_err()
-    {
+    // `stdin` を `take()` で完全に外に切り出す
+    let mut stdin = child.stdin.take().expect("failed to open stdin");
+
+    // 切り出した `stdin` に書き込む
+    if stdin.write_all(&output.stdout).is_err() {
         eprintln!("failed to write to less stdin");
+        let _ = child.kill();
+        let _ = child.wait();
         return ExitCode::FAILURE;
     }
+
+    // lessにデータを流し終えたら、明示的に書き込みを終了させる
+    drop(stdin);
 
     match child.wait() {
         Ok(status) if status.success() => ExitCode::SUCCESS,
