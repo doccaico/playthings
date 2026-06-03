@@ -4,6 +4,7 @@ import ./[utils]
 
 import ./nightup/[
   zig,
+  odin,
   ]
 
 
@@ -53,9 +54,9 @@ proc run*(args: seq[string]) =
   of "zig":
     let distDir = getDistDir(cfg, "zig")
     zig.run(distDir, downloadDir)
-  # of "odin":
-  #   let distDir = getDistDir("odin")
-  #   # odinlang.run(distDir, downloadDir)
+  of "odin":
+    let distDir = getDistDir(cfg, "odin")
+    odin.run(distDir, downloadDir)
   # of "v":
   #   let distDir = getDistDir("v")
   #   # vlang.run(distDir, downloadDir)
