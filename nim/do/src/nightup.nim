@@ -6,6 +6,7 @@ import ./nightup/[
   zig,
   odin,
   v,
+  go,
   ]
 
 
@@ -61,9 +62,9 @@ proc run*(args: seq[string]) =
   of "v":
     let distDir = getDistDir(cfg, "v")
     v.run(distDir, downloadDir)
-  # of "go":
-  #   let distDir = getDistDir("go")
-  #   # golang.run(distDir, downloadDir)
+  of "go":
+    let distDir = getDistDir(cfg, "go")
+    go.run(distDir, downloadDir)
   # of "vim":
   #   # vim.run()
   #   discard
