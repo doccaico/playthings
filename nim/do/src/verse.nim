@@ -1,14 +1,14 @@
 import std/[os, osproc, strformat, strutils]
-import puppy, regex
+import regex
 
 import ./[utils]
 
 
-const HELP_MSG = """
+const HELP_MSG = fmt"""
 Usage:
     do.exe verse 書物 章
 
-      [36m- 旧約 (Old Testament) -[0m
+      {Cyan}- 旧約 (Old Testament) -{Reset}
       創世記:GEN(1:50)
       出エジプト記:EXO(1:40)
       レビ記:LEV(1:27)
@@ -63,7 +63,7 @@ Usage:
       エズラ記(ギリシア語):1ES(1:9)
       エズラ記(ラテン語):2ES(1:16)
       マナセの祈り:MAN(1)
-      [36m- 新約 (New Testament) -[0m
+      {Cyan}- 新約 (New Testament) -{Reset}
       マタイによる福音書:MAT(1:28)
       マルコによる福音書:MRK(1:16)
       ルカによる福音書:LUK(1:24)
@@ -92,31 +92,41 @@ Usage:
       ユダの手紙:JUD(1)
       ヨハネの黙示録:REV(1:22)"""
 
-proc run*(argc: int, argv: seq[string]) =
-  if argc == 0 or argc > 2:
-    viewHelpAndExit stderr, HELP_MSG, 1
-
+proc run*(argv: seq[string]) =
+  if argv.len == 0 or argv.len > 2:
+    stderrMsgAndExit HELP_MSG
   if argv[0] == "-h" or argv[0] == "--help":
-    viewHelpAndExit stdout, HELP_MSG, 0
+    stdoutMsgAndExit HELP_MSG
 
-  let response = get(fmt"https://www.bible.com/ja/bible/1819/{argv[0]}.{argv[1]}/")
+  let url = fmt"https://www.bible.com/ja/bible/1819/{argv[0]}.{argv[1]}/"
+  let (contents, curlRes) = execCmdEx(fmt"""curl -sSL -A "Mozilla/5.0" {url}""")
+  if curlRes != 0:
+     stderrMsgAndExit "failed to 'curl'"
 
   var sentences: seq[string]
-  for m in findAll(response.body, re2("""content">(.+?)</span>""", {regexMultiline, regexDotAll})):
-    let sentence = response.body[m.group(0)].strip(leading=false)
+  for m in findAll(contents, re2("""content">(.+?)</span>""", {regexMultiline, regexDotAll})):
+    let sentence = contents[m.group(0)].strip(leading=false)
     if sentence.len != 0:
       sentences.add sentence
 
-  const TEMP = r"C:\Users\doccaico\Downloads\temp.txt"
+  if sentences.len == 0:
+    stderr.writeLine "no verses found or failed to parse the page"
+    stderr.writeLine fmt"check the page: {url}"
+    quit(QuitFailure)
+
+  # const TEMP = r"C:\Users\doccaico\Downloads\temp.txt"
+  let tmpFile = getTempDir() / fmt"nim_shitaraba_result_{getCurrentProcessId()}.txt"
   var f: File
-  if open(f, TEMP, fmWrite):
-    f.writeLine fmt("[36m{argv[0]}[0m[[32m{argv[1]}[0m]")
+  if open(f, tmpFile, fmWrite):
+    f.writeLine fmt"{Cyan}{argv[0]}{Reset}{Green}[{argv[1]}]{Reset}"
     for s in sentences:
       f.writeLine s
     close(f)
-  const LESS_OPT = "-R --silent"
-  discard execCmd(fmt"less {LESS_OPT} {TEMP}")
-  removeFile(TEMP)
+
+  const LessOpt = "-R -i --silent"
+  discard execCmd(fmt"less {LessOpt} {tmpFile}")
+
+  rmIfExist(tmpFile)
 
 when isMainModule:
   run(commandLineParams())
