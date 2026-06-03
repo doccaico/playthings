@@ -1,11 +1,12 @@
 import std/[os, strutils, sets]
 
+import ./[utils]
+
 
 proc run*() =
   let envPath = getEnv("PATH")
   if envPath == "":
-    stderr.writeLine "not found 'PATH' in env variable"
-    quit(QuitFailure)
+    stderrMsgAndExit "not found 'PATH' in env variable"
 
   let pathSets = toOrderedSet(split($envPath, ';'))
 

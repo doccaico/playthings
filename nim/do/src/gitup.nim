@@ -10,18 +10,23 @@ Usage:
 OPTION:
     -h, --help                 ヘルプメッセージを表示"""
 
-proc run*(argc: int, argv: seq[string]) =
-  if argc == 0 or argc > 2:
-    printMsgAndExit stderr, HELP_MSG, QuitFailure
+proc execCmdStream(cmd: string, args: openArray[string] = []): int =
+  var p = startProcess(cmd, args = args, options = {poUsePath, poParentStreams})
+  result = p.waitForExit()
+  p.close()
+
+proc run*(argv: seq[string]) =
+  if argv.len == 0 or argv.len > 2:
+    stderrMsgAndExit HELP_MSG
   if argv[0] == "-h" or argv[0] == "--help":
-    printMsgAndExit stdout, HELP_MSG, QuitSuccess
+    stdoutMsgAndExit HELP_MSG
 
   var dirPath: string
   var commitMsg: string
 
-  if argc == 2:
+  if argv.len == 2:
     if not dirExists(argv[0]):
-      quit fmt"Does not exist: {argv[0]}", 1
+      stderrMsgAndExit fmt"Does not exist: {argv[0]}"
     dirPath = argv[0]
     commitMsg = argv[1]
   else:
@@ -33,27 +38,33 @@ proc run*(argc: int, argv: seq[string]) =
 
   var statusRes = execCmdEx("git status --porcelain")
   if statusRes.exitCode != 0:
-     printMsgAndExit stderr, "not a git repository (or git command failed)", QuitFailure
+     stderrMsgAndExit "not a git repository (or git command failed)"
 
   let statusOutput = statusRes.output.strip()
   if statusOutput == "":
-    printMsgAndExit stdout, "There is no need to update.", QuitSuccess
+    stdoutMsgAndExit "There is no need to update"
 
-  # git add
-  if execCmd("git add .") != 0:
-    printMsgAndExit stderr, "failed to run 'git add .'", QuitFailure
+  # 変更内容を事前に少し表示（親切設計）
+  echo "==> Detected changes:"
+  echo statusOutput.indent(4)
+  echo ""
 
-  # git commit
-  let commitRes = execCmdEx(fmt"git commit -m {commitMsg.quoteShell}")
-  if commitRes.exitCode != 0:
-    stderr.writeLine commitRes.output
-    printMsgAndExit stderr, "failed to run 'git commit'", QuitFailure
+  # git add .
+  echo "==> Running: git add ."
+  if execCmdStream("git", ["add", "."]) != 0:
+    stderrMsgAndExit "failed to run 'git add .'"
+
+  # git commit -m "..."
+  echo fmt"==> Running: git commit -m ""{commitMsg}"""
+  if execCmdStream("git", ["commit", "-m", commitMsg]) != 0:
+    stderrMsgAndExit "failed to run 'git commit'"
 
   # git push
-  let pushRes = execCmdEx("git push")
-  stdout.writeLine pushRes.output
-  if pushRes.exitCode != 0:
-    printMsgAndExit stderr, "failed to run 'git push'", QuitFailure
+  echo "==> Running: git push"
+  if execCmdStream("git", ["push"]) != 0:
+    stderrMsgAndExit "failed to run 'git push'"
+
+  echo "==> Success! All changes updated and pushed."
 
 when isMainModule:
   run(commandLineParams())
