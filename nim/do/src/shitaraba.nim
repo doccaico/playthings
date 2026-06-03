@@ -1,5 +1,5 @@
 import std/[os, osproc, strformat, encodings, strutils, parseutils, unicode]
-import puppy, regex
+import regex
 
 import ./[utils]
 
@@ -15,21 +15,21 @@ proc convertEmoji(m: RegexMatch2, s: string): string =
   discard s[m.group(0)].parseInt(res)
   $Rune(res)
 
-proc run*(argc: int, argv: seq[string]) =
-  if argc == 0 or argc > 3:
-    writeHelpAndExit stderr, HELP_MSG, 1
+proc run*(argv: seq[string]) =
+  if argv.len == 0 or argv.len > 3:
+    stderrMsgAndExit HELP_MSG
 
   if argv[0] == "-h" or argv[0] == "--help":
-    writeHelpAndExit stdout, HELP_MSG, 0
+    stdoutMsgAndExit HELP_MSG
 
   let (genre, id ,number) = (argv[0], argv[1], argv[2])
 
-  let response = get(
-    fmt"https://jbbs.shitaraba.net/bbs/read.cgi/{genre}/{id}/{number}/l50",
-    headers = @[("Content-Type", "text/html; charset=EUC-JP")]
-  )
+  let url = fmt"https://jbbs.shitaraba.net/bbs/read.cgi/{genre}/{id}/{number}/l50"
+  let pipeCmdStr = fmt"""curl -sSL -A "Mozilla/5.0" {url} | busybox64u iconv -f EUC-JP -t UTF-8"""
 
-  let contents = response.body.convert(destEncoding="UTF-8", srcEncoding="EUC-JP")
+  let (contents, curlRes) = execCmdEx(fmt"""cmd /C "{pipeCmdStr}"""")
+  if curlRes != 0:
+     stderrMsgAndExit "failed to 'curl and busybox64u iconv'"
 
   var name: seq[string]
   var date: seq[string]
@@ -43,24 +43,21 @@ proc run*(argc: int, argv: seq[string]) =
     var body = contents[m.group(2)].strip().replace("<br>          <br>", "").replace("<br>", "")
     post.add body.replace(re2("&#(\\d+?);"), convertEmoji)
 
-  # DEBUG
-  # echo name
-  # echo date
-  # echo post
-
   doAssert(name.len == date.len and name.len == post.len)
 
-  const TEMP = r"C:\Users\doccaico\Downloads\temp.txt"
-  const LESS_OPT = "-R --silent"
+  let tmpFile = getTempDir() / fmt"nim_shitaraba_result_{getCurrentProcessId()}.txt"
   var f: File
-  if open(f, TEMP, fmWrite):
+  if open(f, tmpFile, fmWrite):
     for i in 0..<name.len:
-      f.writeLine fmt("[36m{name[i]}[0m: [32m{date[i]}[0m")
+      f.writeLine fmt"{Cyan}{name[i]}{Reset} : {Green}{date[i]}{Reset}"
       f.writeLine post[i]
       f.writeLine ""
     close(f)
-  discard execCmd(fmt"less {LESS_OPT} {TEMP}")
-  removeFile(TEMP)
+
+  const LessOpt = "-R -i --silent"
+  discard execCmd(fmt"less {LessOpt} {tmpFile}")
+
+  rmIfExist(tmpFile)
 
 when isMainModule:
   run(commandLineParams())
