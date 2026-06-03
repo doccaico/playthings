@@ -1,4 +1,4 @@
-import std/[os, osproc, strformat, encodings, strutils, parseutils, unicode]
+import std/[os, osproc, strformat, strutils, parseutils, unicode]
 import regex
 
 import ./[utils]

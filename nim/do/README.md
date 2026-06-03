@@ -2,7 +2,9 @@
 
 ### Build and Minimizing Binary Size
 ```sh
-$ nim c --cc:vcc --mm:arc -d:release --opt:size --threads:off do.nim
+$ nimble install regex
+
+$ nim c --cc:vcc --mm:arc -d:release --opt:size --threads:off src\do.nim
 $ upx --best --lzma do.exe
 ```
 

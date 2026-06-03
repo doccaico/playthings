@@ -3,11 +3,11 @@ import std/[os, strformat, parsecfg]
 import ./[utils]
 
 import ./nightup/[
-  zig, # curl, tar
-  odin, # curl, tar
-  v, # curl, tar
-  go, # curl, tar
-  vim, # curl
+  zig,    # curl, tar
+  odin,   # curl, tar
+  v,      # curl, tar
+  go,     # curl, tar
+  vim,    # curl
   ]
 
 
@@ -69,7 +69,8 @@ proc run*(args: seq[string]) =
   of "vim":
     vim.run()
   else:
-    stderrMsgAndExit fmt"nightup: unknown command '{args[0]}'\n{HELP_MSG}"
+    stderr.writeLine fmt"nightup: unknown command '{args[0]}'"
+    stderrMsgAndExit HELP_MSG
 
 when isMainModule:
   run(commandLineParams())

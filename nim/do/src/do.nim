@@ -1,7 +1,3 @@
-# 2026/05/24 (Nim Compiler Version 2.2.10)
-# nimble install regex puppy
-# nim c -d:release --opt:size --threads:off --mm:arc --cc:vcc do.nim
-
 import std/[os, strformat]
 
 import ./[utils]
@@ -13,6 +9,7 @@ import ./[
   delete_duplicate_path,
   verse,                   # less, curl
   wiki,                    # less, curl, jq
+  nightup,                 # curl, tar
 ]
 
 
@@ -41,6 +38,7 @@ proc main(argv: seq[string]) =
   of "delete_duplicate_path": delete_duplicate_path.run()
   of "verse": verse.run(argv[1..^1])
   of "wiki": wiki.run(argv[1..^1])
+  of "nightup": nightup.run(argv[1..^1])
   else: stderrMsgAndExit fmt"unknown command '{argv[0]}'\n{HELP_MSG}"
 
 when isMainModule:
