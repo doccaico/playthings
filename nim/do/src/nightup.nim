@@ -3,10 +3,11 @@ import std/[os, strformat, parsecfg]
 import ./[utils]
 
 import ./nightup/[
-  zig,
-  odin,
-  v,
-  go,
+  zig, # curl, tar
+  odin, # curl, tar
+  v, # curl, tar
+  go, # curl, tar
+  vim, # curl
   ]
 
 
@@ -65,9 +66,8 @@ proc run*(args: seq[string]) =
   of "go":
     let distDir = getDistDir(cfg, "go")
     go.run(distDir, downloadDir)
-  # of "vim":
-  #   # vim.run()
-  #   discard
+  of "vim":
+    vim.run()
   else:
     stderrMsgAndExit fmt"nightup: unknown command '{args[0]}'\n{HELP_MSG}"
 
