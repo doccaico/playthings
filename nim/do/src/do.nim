@@ -9,10 +9,10 @@ import ./[utils]
 import ./[
   diary_search,            # less, rg
   gitup,                   # git
-  shitaraba,               # less
+  shitaraba,               # less, curl
   delete_duplicate_path,
-  verse,                   # less
-  # wiki,                    # less, jq
+  verse,                   # less, curl
+  wiki,                    # less, curl, jq
 ]
 
 
@@ -40,7 +40,7 @@ proc main(argv: seq[string]) =
   of "shitaraba": shitaraba.run(argv[1..^1])
   of "delete_duplicate_path": delete_duplicate_path.run()
   of "verse": verse.run(argv[1..^1])
-  # of "wiki": wiki.run(argv[1..^1])
+  of "wiki": wiki.run(argv[1..^1])
   else: stderrMsgAndExit fmt"unknown command '{argv[0]}'\n{HELP_MSG}"
 
 when isMainModule:

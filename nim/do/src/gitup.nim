@@ -4,7 +4,7 @@ import ./[utils]
 
 
 const HELP_MSG = """
-Usage:
+USAGE:
     do.exe gitup [OPTION] DIR "Up"
     do.exe gitup [OPTION]     "Up"
 OPTION:

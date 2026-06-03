@@ -5,8 +5,10 @@ import ./[utils]
 
 
 const HELP_MSG = fmt"""
-Usage:
-    do.exe verse 書物 章
+USAGE:
+    do.exe verse [OPTION] 書物 章
+OPTION:
+    -h, --help                 ヘルプメッセージを表示
 
       {Cyan}- 旧約 (Old Testament) -{Reset}
       創世記:GEN(1:50)
@@ -114,8 +116,7 @@ proc run*(argv: seq[string]) =
     stderr.writeLine fmt"check the page: {url}"
     quit(QuitFailure)
 
-  # const TEMP = r"C:\Users\doccaico\Downloads\temp.txt"
-  let tmpFile = getTempDir() / fmt"nim_shitaraba_result_{getCurrentProcessId()}.txt"
+  let tmpFile = getTempDir() / fmt"nim_verse_result_{getCurrentProcessId()}.txt"
   var f: File
   if open(f, tmpFile, fmWrite):
     f.writeLine fmt"{Cyan}{argv[0]}{Reset}{Green}[{argv[1]}]{Reset}"

@@ -4,7 +4,7 @@ import ./[utils]
 
 
 const HELP_MSG = """
-Usage:
+USAGE:
     do.exe diary_search [OPTION] 検索キーワード
 OPTION:
     -h, --help                 ヘルプメッセージを表示

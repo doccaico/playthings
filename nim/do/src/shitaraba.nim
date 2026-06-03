@@ -5,7 +5,7 @@ import ./[utils]
 
 
 const HELP_MSG = """
-Usage:
+USAGE:
     do.exe shitaraba [OPTION] GENRE ID NUMBER
 OPTION:
     -h, --help                 ヘルプメッセージを表示"""
