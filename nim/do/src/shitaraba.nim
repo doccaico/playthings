@@ -15,7 +15,7 @@ proc convertEmoji(m: RegexMatch2, s: string): string =
   discard s[m.group(0)].parseInt(res)
   $Rune(res)
 
-proc main*(argc: int, argv: seq[string]) =
+proc run*(argc: int, argv: seq[string]) =
   if argc == 0 or argc > 3:
     writeHelpAndExit stderr, HELP_MSG, 1
 
@@ -63,4 +63,4 @@ proc main*(argc: int, argv: seq[string]) =
   removeFile(TEMP)
 
 when isMainModule:
-  main(paramCount(), commandLineParams())
+  run(commandLineParams())

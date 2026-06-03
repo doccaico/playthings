@@ -1,28 +1,21 @@
-import std/[strutils, sets]
-import winim/lean
+import std/[os, strutils, sets]
 
 
-const
-  MAX_LENGTH = 32767
-  ENV_PATH = "PATH"
+proc run*() =
+  let envPath = getEnv("PATH")
+  if envPath == "":
+    stderr.writeLine "not found 'PATH' in env variable"
+    quit(QuitFailure)
 
-proc main*() =
-  var buffer = newWString(MAX_LENGTH)
-  let size = DWORD(len(buffer))
-  GetEnvironmentVariable(ENV_PATH, buffer, size)
-
-  let pathSets = toOrderedSet(split($$buffer, ';'))
+  let pathSets = toOrderedSet(split($envPath, ';'))
 
   var pathSeq: seq[string]
   for path in pathSets.items:
     pathSeq.add path
-
-  # DEBUG
-  # for path in pathSeq:
-  #   echo path
+    # echo path
 
   let newPath = join(pathSeq, ";")
-  stdout.writeLine newPath
+  stdout.write newPath
 
 when isMainModule:
-  main()
+  run()

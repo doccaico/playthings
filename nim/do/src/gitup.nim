@@ -10,7 +10,7 @@ Usage:
 OPTION:
     -h, --help                 ヘルプメッセージを表示"""
 
-proc main*(argc: int, argv: seq[string]) =
+proc run*(argc: int, argv: seq[string]) =
   if argc == 0 or argc > 2:
     printMsgAndExit stderr, HELP_MSG, QuitFailure
   if argv[0] == "-h" or argv[0] == "--help":
@@ -56,4 +56,4 @@ proc main*(argc: int, argv: seq[string]) =
     printMsgAndExit stderr, "failed to run 'git push'", QuitFailure
 
 when isMainModule:
-  main(paramCount(), commandLineParams())
+  run(commandLineParams())

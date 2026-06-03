@@ -8,7 +8,7 @@ const HELP_MSG = """
 Usage:
     do.exe wiki COUNT"""
 
-proc main*(argc: int, argv: seq[string]) =
+proc run*(argc: int, argv: seq[string]) =
   if argc == 0 or argc > 1:
     writeHelpAndExit stderr, HELP_MSG, 1
 
@@ -47,4 +47,4 @@ proc main*(argc: int, argv: seq[string]) =
   removeFile(TEMP)
 
 when isMainModule:
-  main(paramCount(), commandLineParams())
+  run(commandLineParams())

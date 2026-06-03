@@ -8,8 +8,8 @@ import ./[utils]
 
 import ./[
   diary_search,            # less, rg
-  gitup,                   # git
-  shitaraba,               # less
+  # gitup,                   # git
+  # shitaraba,               # less
   # delete_duplicate_path,
   # verse,                   # less
   # wiki,                    # less, jq
@@ -29,19 +29,19 @@ COMMAND:
     verse                       聖書(新共同訳)を表示
     wiki                        ランダムWIKIのリストを表示"""
 
-proc main(argc: int, argv: seq[string]) =
-  if argc == 0:
-    printMsgAndExit stderr, HELP_MSG, QuitFailure
+proc main(argv: seq[string]) =
+  if argv.len == 0:
+    stderrMsgAndExit HELP_MSG
   if argv[0] == "-h" or argv[0] == "--help":
-    printMsgAndExit stdout, HELP_MSG, QuitSuccess
+    stdoutMsgAndExit HELP_MSG
   case argv[0]
-  of "diary_search": diary_search.main(argc - 1, argv[1..^1])
-  of "gitup": gitup.main(argc - 1, argv[1..^1])
-  of "shitaraba": shitaraba.main(argc - 1, argv[1..^1])
-  # of "delete_duplicate_path": delete_duplicate_path.main()
-  # of "verse": verse.main(argc - 1, argv[1..^1])
-  # of "wiki": wiki.main(argc - 1, argv[1..^1])
-  else: printMsgAndExit stderr, fmt"unknown command '{argv[0]}'\n{HELP_MSG}", QuitFailure
+  of "diary_search": diary_search.run(argv[1..^1])
+  # of "gitup": gitup.run(argv[1..^1])
+  # of "shitaraba": shitaraba.run(argv[1..^1])
+  # of "delete_duplicate_path": delete_duplicate_path.run()
+  # of "verse": verse.run(argv[1..^1])
+  # of "wiki": wiki.run(argv[1..^1])
+  else: stderrMsgAndExit fmt"unknown command '{argv[0]}'\n{HELP_MSG}"
 
 when isMainModule:
-  main(paramCount(), commandLineParams())
+  main(commandLineParams())
